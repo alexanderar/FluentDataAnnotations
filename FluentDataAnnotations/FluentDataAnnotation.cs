@@ -262,7 +262,7 @@ namespace FluentDataAnnotations
         /// </returns>
         private string DisplayNameFromCamelCase(string name)
         {
-            name = this._camelCaseRegex.Replace(name, " $0");
+            name = this._camelCaseRegex.Replace(name, " ");
             if (name.EndsWith(" Id"))
             {
                 name = name.Substring(0, name.Length - 3);
