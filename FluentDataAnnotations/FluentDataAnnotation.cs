@@ -33,7 +33,7 @@ namespace FluentDataAnnotations
         /// <summary>
         ///     The camel case regular expression.
         /// </summary>
-        private readonly Regex _camelCaseRegex = new Regex(@"\B\p{Lu}\p{Ll}", RegexOptions.Compiled);
+        private readonly Regex _camelCaseRegex = new Regex(@"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", RegexOptions.Compiled);
 
         #endregion
 
