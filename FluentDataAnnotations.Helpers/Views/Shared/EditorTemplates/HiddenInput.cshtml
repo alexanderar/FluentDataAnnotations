@@ -1,0 +1,13 @@
+﻿@using System.Web.Mvc.Html
+
+@if(!Html.ViewContext.ViewData.ModelMetadata.HideSurroundingHtml) { 
+	<text>@ViewData.TemplateInfo.FormattedModelValue</text>
+}
+@{
+	var bytes = Model as byte[];
+	object modelValue = bytes != null ? Convert.ToBase64String(bytes) : Model;
+}
+@Html.Hidden("", modelValue)
+
+
+
