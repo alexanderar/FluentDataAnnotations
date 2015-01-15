@@ -39,7 +39,7 @@ namespace FluentDataAnnotations
         /// <summary>
         ///     The camel case regular expression.
         /// </summary>
-        private readonly Regex _camelCaseRegex = new Regex(@"\B\p{Lu}\p{Ll}", RegexOptions.Compiled);
+        private readonly Regex _camelCaseRegex = new Regex(@"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", RegexOptions.Compiled);
 
         #endregion
 
@@ -300,7 +300,7 @@ namespace FluentDataAnnotations
         /// </returns>
         private string DisplayNameFromCamelCase(string name)
         {
-            name = this._camelCaseRegex.Replace(name, " $0");
+            name = this._camelCaseRegex.Replace(name, " ");
             if (name.EndsWith(" Id"))
             {
                 name = name.Substring(0, name.Length - 3);
