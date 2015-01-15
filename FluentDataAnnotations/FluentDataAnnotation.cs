@@ -12,6 +12,7 @@ namespace FluentDataAnnotations
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Reflection;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -21,7 +22,6 @@ namespace FluentDataAnnotations
     /// View model type
     /// </typeparam>
     public abstract class FluentDataAnnotation<T> : IFluentAnnotation, IFluentAnnotation<T>
-        where T : class
     {
         #region Fields
 
@@ -29,6 +29,12 @@ namespace FluentDataAnnotations
         ///     The model meta-data.
         /// </summary>
         private readonly Dictionary<string, MemberMetadata> _modelMetadata = new Dictionary<string, MemberMetadata>();
+
+        /// <summary>
+        /// The _model actions.
+        /// </summary>
+        private readonly Dictionary<string, IList<Tuple<Func<T, bool>, Action>>> _modelActions
+            = new Dictionary<string, IList<Tuple<Func<T, bool>, Action>>>();
 
         /// <summary>
         ///     The camel case regular expression.
@@ -141,6 +147,38 @@ namespace FluentDataAnnotations
             }
 
             return this._modelMetadata[member.Member.Name];
+        }
+
+        /// <summary>
+        /// Defines a condition for setting the annotations 
+        /// </summary>
+        /// <param name="predicate">
+        /// The predicate.
+        /// </param>
+        /// <param name="action">
+        /// The action.
+        /// </param>
+        public void When(Func<T, bool> predicate, Action action)
+        {
+            var modelTypeName = typeof(T).FullName;
+            if (!this._modelActions.ContainsKey(modelTypeName))
+            {
+                this._modelActions.Add(modelTypeName, new List<Tuple<Func<T, bool>, Action>>());
+            }
+
+            this._modelActions[modelTypeName].Add(new Tuple<Func<T, bool>, Action>(predicate, action));
+        }
+
+        /// <summary>
+        /// The get actions.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IList"/>.
+        /// </returns>
+        public IList<Tuple<Func<T, bool>, Action>> GetConditionalActions()
+        {
+            var modelTypeName = typeof(T).FullName;
+            return this._modelActions.ContainsKey(modelTypeName) ? this._modelActions[modelTypeName] : null;
         }
 
         /// <summary>

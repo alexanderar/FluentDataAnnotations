@@ -72,31 +72,37 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EditorTemplates\Boolean.cshtml" />
-    <Content Include="EditorTemplates\Byte.cshtml" />
-    <Content Include="EditorTemplates\Collection.cshtml" />
-    <Content Include="EditorTemplates\Date.cshtml" />
-    <Content Include="EditorTemplates\DateTime.cshtml" />
-    <Content Include="EditorTemplates\Decimal.cshtml" />
-    <Content Include="EditorTemplates\EmailAddress.cshtml" />
-    <Content Include="EditorTemplates\HiddenInput.cshtml" />
-    <Content Include="EditorTemplates\HtmlInput.cshtml" />
-    <Content Include="EditorTemplates\Int32.cshtml" />
-    <Content Include="EditorTemplates\Int64.cshtml" />
-    <Content Include="EditorTemplates\MultilineText.cshtml" />
-    <Content Include="EditorTemplates\Number.cshtml" />
-    <Content Include="EditorTemplates\Object.cshtml" />
-    <Content Include="EditorTemplates\Password.cshtml" />
-    <Content Include="EditorTemplates\PhoneNumber.cshtml" />
-    <Content Include="EditorTemplates\SByte.cshtml" />
-    <Content Include="EditorTemplates\Single.cshtml" />
-    <Content Include="EditorTemplates\String.cshtml" />
-    <Content Include="EditorTemplates\Text.cshtml" />
-    <Content Include="EditorTemplates\Time.cshtml" />
-    <Content Include="EditorTemplates\UInt32.cshtml" />
-    <Content Include="EditorTemplates\UInt64.cshtml" />
-    <Content Include="EditorTemplates\Url.cshtml" />
     <None Include="packages.config" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Byte.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\HiddenInput.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\HtmlInput.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Object.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PhoneNumber.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SByte.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Single.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Text.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\UInt32.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\UInt64.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Url.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FluentDataAnnotations\FluentDataAnnotations.Core.csproj">
+      <Project>{C4CAE14C-F031-4AE3-A8DA-838BA0B3E8A9}</Project>
+      <Name>FluentDataAnnotations.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

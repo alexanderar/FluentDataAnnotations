@@ -11,8 +11,6 @@ namespace WebApplication1
 
     using FluentDataAnnotations;
 
-    using Microsoft.Owin.Security.Provider;
-
     public class ChangePasswordViewModelAnnotations : FluentDataAnnotation<ChangePasswordViewModel>
     {
         public ChangePasswordViewModelAnnotations()
@@ -25,6 +23,9 @@ namespace WebApplication1
                 .SetShowForEdit(() => true)
                 .SetShowForDisplay(() => true)
                 .SetDisplayFormat("Custom format {0}", true);
+
+            this.When(x => x.ConfirmPassword.StartsWith("123"),
+                () => this.For(m=>m.ConfirmPassword).SetDisplayFormat("Custom format for password that starts with 123 {0}"));
 
             For(x => x.HiddenTest).SetHiddenInput();
 

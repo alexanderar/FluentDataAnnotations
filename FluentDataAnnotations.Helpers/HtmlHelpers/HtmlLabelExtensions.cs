@@ -13,7 +13,6 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Web.Mvc;
-    using System.Web;
     using System.Web.Routing;
 
     /// <summary>
@@ -179,7 +178,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-            var key = isForEdit ? "ShowLabelForEdit" : "ShowLabelForDisplay";
+            var key = isForEdit ? Utilities.ShowLabelForEditKey : Utilities.ShowLabelForDisplayKey;
             if (metadata.AdditionalValues.ContainsKey(key) && (bool)metadata.AdditionalValues[key] == false)
             {
                 return MvcHtmlString.Empty;

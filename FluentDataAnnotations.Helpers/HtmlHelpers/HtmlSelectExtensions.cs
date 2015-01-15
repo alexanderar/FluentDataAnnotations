@@ -1277,7 +1277,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
 
             if (metadata.IsReadOnly)
             {
-                if (!metadata.AdditionalValues.ContainsKey("DisplayAsDisabledInput"))
+                if (!metadata.AdditionalValues.ContainsKey(Utilities.DisplayAsDisabledInputKey))
                 {
                     IEnumerable<SelectListItem> selected = selectList.Where(i => i.Selected);
                     IList<SelectListItem> selectListItems = selected as IList<SelectListItem> ?? selected.ToList();

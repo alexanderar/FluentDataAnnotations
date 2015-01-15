@@ -6,7 +6,6 @@
 //   The simple injector adapter.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace FluentDataAnnotations.SimpleInjectorAdapter
 {
     using System;
@@ -15,16 +14,16 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
     using SimpleInjector.Integration.Web;
 
     /// <summary>
-    /// The simple injector adapter.
+    ///     The simple injector adapter.
     /// </summary>
     public class SimpleInjectorAdapter : IDIContainer
     {
         #region Fields
 
         /// <summary>
-        /// The _container.
+        ///     The _container.
         /// </summary>
-        private readonly SimpleInjector.Container _container;
+        private readonly Container _container;
 
         #endregion
 
@@ -60,7 +59,21 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
         }
 
         /// <summary>
-        /// The register.
+        /// The is type registered.
+        /// </summary>
+        /// <param name="type">
+        /// The type.
+        /// </param>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        public bool IsTypeRegistered(Type type)
+        {
+            return this._container.GetRegistration(type, false) != null;
+        }
+
+        /// <summary>
+        /// Registers specific implementation type for an interface type.
         /// </summary>
         /// <param name="interfaceType">
         /// The interface type.
@@ -72,11 +85,6 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
         {
             var lifesicle = new WebRequestLifestyle(true);
             this._container.Register(interfaceType, implementationType, lifesicle);
-        }
-
-        public bool IsTypeRegistered(Type type)
-        {
-            return this._container.GetRegistration(type, false) != null;
         }
 
         #endregion

@@ -1,14 +1,12 @@
-﻿// Summary:
-// File: WebApplication1/WebApplication1/FluentAnnotationsRegistration.cs 
-// Created at: 02/01/2015    22:04
-// Created by: 
-
-#region
-
-
-
-#endregion
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright company="" file="FluentAnnotationsRegistration.cs">
+//   
+// </copyright>
+// <summary>
+//   The fluent annotations registration.
+// </summary>
+// 
+// --------------------------------------------------------------------------------------------------------------------
 namespace FluentDataAnnotations.SimpleInjectorAdapter
 {
     using System;
@@ -20,33 +18,61 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
     using SimpleInjector;
     using SimpleInjector.Integration.Web;
 
+    /// <summary>
+    /// The fluent annotations registration.
+    /// </summary>
     public static class FluentAnnotationsRegistration
     {
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The register fluent annotations.
+        /// </summary>
+        /// <param name="container">
+        /// The container.
+        /// </param>
         public static void RegisterFluentAnnotations(this Container container)
         {
-            var assemblies = BuildManager.GetReferencedAssemblies().OfType<Assembly>().ToArray();
+            Assembly[] assemblies = BuildManager.GetReferencedAssemblies().OfType<Assembly>().ToArray();
 
-            var displayAnnotationTypes = GetAnnotationTypes(assemblies);
+            IEnumerable<Type> displayAnnotationTypes = GetAnnotationTypes(assemblies);
 
-            var genericAnnotationType = typeof (IFluentAnnotation<>);
+            Type genericAnnotationType = typeof(IFluentAnnotation<>);
 
-            foreach (var type in displayAnnotationTypes)
+            foreach (Type type in displayAnnotationTypes)
             {
-                var interfaceType = type.GetInterfaces()
-                    .FirstOrDefault(x => x.IsGenericType
-                                         && x.GetGenericTypeDefinition() == genericAnnotationType);
+                Type interfaceType =
+                    type.GetInterfaces()
+                        .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericAnnotationType);
 
-                 var lifesicle = new WebRequestLifestyle(true);
-                 container.Register(interfaceType, type, lifesicle);
+                var lifesicle = new WebRequestLifestyle(true);
+                container.Register(interfaceType, type, lifesicle);
             }
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The get annotation types.
+        /// </summary>
+        /// <param name="assemblies">
+        /// The assemblies.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IEnumerable"/>.
+        /// </returns>
         private static IEnumerable<Type> GetAnnotationTypes(IEnumerable<Assembly> assemblies)
         {
-            var t = typeof (IFluentAnnotation);
-            return assemblies.Where(x => !x.IsDynamic).SelectMany(x => x.GetExportedTypes())
-                .Where(x => t.IsAssignableFrom(x) && !x.IsAbstract && !x.IsGenericTypeDefinition)
-                .ToArray();
+            Type t = typeof(IFluentAnnotation);
+            return
+                assemblies.Where(x => !x.IsDynamic)
+                    .SelectMany(x => x.GetExportedTypes())
+                    .Where(x => t.IsAssignableFrom(x) && !x.IsAbstract && !x.IsGenericTypeDefinition)
+                    .ToArray();
         }
+
+        #endregion
     }
 }

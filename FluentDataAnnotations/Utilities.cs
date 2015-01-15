@@ -6,22 +6,34 @@
 //   The utilities.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FluentDataAnnotations
 {
     /// <summary>
-    /// The utilities.
+    ///     The utilities.
     /// </summary>
     public static class Utilities
     {
+        #region Constants
+
+        /// <summary>
+        /// The display as disabled input key.
+        /// </summary>
+        public const string DisplayAsDisabledInputKey = "FluentDataAnnotations.DisplayAsDisabledInput";
+
+        /// <summary>
+        /// The show label for display key.
+        /// </summary>
+        public const string ShowLabelForDisplayKey = "FluentDataAnnotations.ShowLabelForDisplay";
+
+        /// <summary>
+        /// The show label for edit key.
+        /// </summary>
+        public const string ShowLabelForEditKey = "FluentDataAnnotations.ShowLabelForEdit";
+
+        #endregion
+
+        #region Public Methods and Operators
+
         /// <summary>
         /// The is null or white space.
         /// </summary>
@@ -35,5 +47,7 @@ namespace FluentDataAnnotations
         {
             return string.IsNullOrWhiteSpace(text);
         }
+
+        #endregion
     }
 }

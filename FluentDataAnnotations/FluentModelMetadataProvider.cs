@@ -100,6 +100,16 @@ namespace FluentDataAnnotations
             return metadata;
         }
 
+        public override ModelMetadata GetMetadataForType(Func<object> modelAccessor, Type modelType)
+        {
+            return base.GetMetadataForType(modelAccessor, modelType);
+        }
+
+        public override IEnumerable<ModelMetadata> GetMetadataForProperties(object container, Type containerType)
+        {
+            return base.GetMetadataForProperties(container, containerType);
+        }
+
         /// <summary>
         /// The get metadata for property.
         /// </summary>
@@ -333,7 +343,7 @@ namespace FluentDataAnnotations
                 metadata.IsReadOnly = metadata.IsReadOnly || readOnlyFormat.IsReadOnly;
                 if (readOnlyFormat.DisplayAsDisabledInput)
                 {
-                    metadata.AdditionalValues["DisplayAsDisabledInput"] = true;
+                    metadata.AdditionalValues[Utilities.DisplayAsDisabledInputKey] = true;
                 }
             }
             else
@@ -359,14 +369,14 @@ namespace FluentDataAnnotations
             metadata.ShowForDisplay = metadata.ShowForDisplay && metadataContainer.ShowForDisplay(propertyName);
             if (metadata.ShowForDisplay == false)
             {
-                metadata.AdditionalValues["ShowLabelForDisplay"] = false;
+                metadata.AdditionalValues[Utilities.ShowLabelForDisplayKey] = false;
             }
 
             if (!metadata.TemplateHint.IsNullOrWhiteSpace()
                 && metadata.TemplateHint.Equals("HiddenInput", StringComparison.OrdinalIgnoreCase))
             {
                 metadata.HideSurroundingHtml = true;
-                metadata.AdditionalValues["ShowLabelForDisplay"] = false;
+                metadata.AdditionalValues[Utilities.ShowLabelForDisplayKey] = false;
             }
         }
 
@@ -387,14 +397,14 @@ namespace FluentDataAnnotations
             metadata.ShowForEdit = metadata.ShowForEdit && metadataContainer.ShowForEdit(propertyName);
             if (metadata.ShowForEdit == false)
             {
-                metadata.AdditionalValues["ShowLabelForEdit"] = false;
+                metadata.AdditionalValues[Utilities.ShowLabelForEditKey] = false;
             }
 
             if (!metadata.TemplateHint.IsNullOrWhiteSpace()
                 && metadata.TemplateHint.Equals("HiddenInput", StringComparison.OrdinalIgnoreCase))
             {
                 metadata.HideSurroundingHtml = true;
-                metadata.AdditionalValues["ShowLabelForEdit"] = false;
+                metadata.AdditionalValues[Utilities.ShowLabelForEditKey] = false;
             }
         }
 

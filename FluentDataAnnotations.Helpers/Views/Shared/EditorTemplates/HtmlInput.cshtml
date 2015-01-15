@@ -1,12 +1,14 @@
 ﻿@using System.Web.Mvc
 @using System.Web.Mvc.Html
+@using FluentDataAnnotations
+
 
 @if (!ViewData.ModelMetadata.ShowForEdit)
 {
     return;
 }
 
-@if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey("DisplayAsDisabledInput"))
+@if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey(Utilities.DisplayAsDisabledInputKey))
 {
     @Html.Encode(ViewData.TemplateInfo.FormattedModelValue)
     return;
@@ -17,9 +19,9 @@
     {
         props["disabled"] = "disabled";
     } 
-    props["class"] = props.ContainsKey("class") ? props["class"].ToString() + " text-box single-line" : "text-box single-line";
     
+    props["class"] = props.ContainsKey("class") ? props["class"] + " text-box single-line" : "text-box single-line";
+    props["type"] = ViewData["type"];
     @Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue, props)
 }
-
 

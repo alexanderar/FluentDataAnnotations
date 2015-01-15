@@ -9,16 +9,17 @@
 namespace FluentDataAnnotations
 {
     using System;
-    using System.Text.RegularExpressions;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The FluentAnnotation interface.
     /// </summary>
     /// <typeparam name="T">
     /// </typeparam>
+
     public interface IFluentAnnotation<T>
-        where T : class
     {
+        IList<Tuple<Func<T, bool>, Action>> GetConditionalActions();
     }
 
     /// <summary>
@@ -106,17 +107,6 @@ namespace FluentDataAnnotations
         bool ShowForDisplay(string propName);
 
         /// <summary>
-        /// The mask pattern.
-        /// </summary>
-        /// <param name="propName">
-        ///     The prop name.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Regex"/>.
-        /// </returns>
-        ValueTransform ValueTransform(string propName);
-
-        /// <summary>
         /// The show for edit.
         /// </summary>
         /// <param name="propName">
@@ -128,7 +118,7 @@ namespace FluentDataAnnotations
         bool ShowForEdit(string propName);
 
         /// <summary>
-        /// The ui hint.
+        /// The UI hint.
         /// </summary>
         /// <param name="propName">
         /// The prop name.
@@ -137,6 +127,17 @@ namespace FluentDataAnnotations
         /// The <see cref="string"/>.
         /// </returns>
         string UIHint(string propName);
+
+        /// <summary>
+        /// The value transform.
+        /// </summary>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ValueTransform"/>.
+        /// </returns>
+        ValueTransform ValueTransform(string propName);
 
         #endregion
     }

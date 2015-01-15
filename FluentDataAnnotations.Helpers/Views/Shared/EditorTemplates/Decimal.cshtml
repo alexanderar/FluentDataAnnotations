@@ -1,5 +1,6 @@
 ﻿@using System.Web.Mvc
 @using System.Web.Mvc.Html
+@using FluentDataAnnotations
 
 
 @if (!ViewData.ModelMetadata.ShowForEdit)
@@ -7,7 +8,7 @@
     return;
 }
 
-@if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey("DisplayAsDisabledInput"))
+@if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey(Utilities.DisplayAsDisabledInputKey))
 {
     @Html.Encode(ViewData.TemplateInfo.FormattedModelValue)
     return;
