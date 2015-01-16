@@ -21,7 +21,7 @@ namespace FluentDataAnnotations
     /// <typeparam name="T">
     /// View model type
     /// </typeparam>
-    public abstract class FluentDataAnnotation<T> : IFluentAnnotation, IFluentAnnotation<T>
+    public abstract class FluentDataAnnotation<T> : IFluentAnnotation<T>
     {
         #region Fields
 

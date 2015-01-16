@@ -25,7 +25,7 @@ namespace FluentDataAnnotations
         /// <summary>
         ///     The _container.
         /// </summary>
-        private readonly IDIContainer _container;
+        private readonly IContainer _container;
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace FluentDataAnnotations
         /// <param name="container">
         /// The container.
         /// </param>
-        public FluentModelMetadataProvider(IDIContainer container)
+        public FluentModelMetadataProvider(IContainer container)
         {
             this._container = container;
         }
@@ -98,16 +98,6 @@ namespace FluentDataAnnotations
                 propertyName);
 
             return metadata;
-        }
-
-        public override ModelMetadata GetMetadataForType(Func<object> modelAccessor, Type modelType)
-        {
-            return base.GetMetadataForType(modelAccessor, modelType);
-        }
-
-        public override IEnumerable<ModelMetadata> GetMetadataForProperties(object container, Type containerType)
-        {
-            return base.GetMetadataForProperties(container, containerType);
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
     /// <summary>
     ///     The simple injector adapter.
     /// </summary>
-    public class SimpleInjectorAdapter : IDIContainer
+    public class SimpleInjectorAdapter : IContainer
     {
         #region Fields
 
@@ -56,6 +56,21 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
         public object GetInstance(Type t)
         {
             return this._container.GetInstance(t);
+        }
+
+        public void Register(Type interfaceType, Func<object> instanceCreator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Register<T>(Func<object> instanceCreator) where T : IFluentAnnotation
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Register<TInt, TImpl>() where TInt : IFluentAnnotation where TImpl : IFluentAnnotation, new()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

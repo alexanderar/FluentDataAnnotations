@@ -73,10 +73,16 @@
     <Compile Include="DisplayFormat.cs" />
     <Compile Include="FluentDataAnnotation.cs" />
     <Compile Include="IFluentAnnotation.cs" />
-    <Compile Include="IDIContainer.cs" />
+    <Compile Include="IContainer.cs" />
     <Compile Include="MemberMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadOnlyFormat.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleContainer.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="ValueTransform.cs" />
   </ItemGroup>
@@ -84,7 +90,12 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

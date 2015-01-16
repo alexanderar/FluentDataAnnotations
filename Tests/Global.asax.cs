@@ -23,16 +23,22 @@ namespace WebApplication1
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            
+
+
+            //var container = new SimpleContainer();
+
+            //container.Register<IFluentAnnotation<ChangePasswordViewModel>, ChangePasswordViewModelAnnotations>();
 
             var container = new Container();
 
-            container.RegisterFluentAnnotations();
+            //container.RegisterFluentAnnotations();
             // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
             // This is an extension method from the integration package as well.
             container.RegisterMvcIntegratedFilterProvider();
+
+           
 
             ModelMetadataProviders.Current = new FluentModelMetadataProvider(new SimpleInjectorAdapter(container));
 

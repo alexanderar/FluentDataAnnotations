@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IDIContainer.cs" company="">
+// <copyright file="IContainer.cs" company="">
 //   
 // </copyright>
 // <summary>
@@ -8,41 +8,44 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FluentDataAnnotations
 {
     /// <summary>
-    /// The DIContainer interface.
+    ///     The DIContainer interface.
     /// </summary>
-    public interface IDIContainer
+    public interface IContainer
     {
         /// <summary>
-        /// The get instance.
+        ///     The get instance.
         /// </summary>
         /// <param name="t">
-        /// The t.
+        ///     The t.
         /// </param>
         /// <returns>
-        /// The <see cref="object"/>.
+        ///     The <see cref="object" />.
         /// </returns>
         object GetInstance(Type t);
 
         /// <summary>
-        /// The register.
+        ///     The register.
         /// </summary>
         /// <param name="interfaceType">
-        /// The interface type.
+        ///     The interface type.
         /// </param>
         /// <param name="implementationType">
-        /// The implementation type.
+        ///     The implementation type.
         /// </param>
         void Register(Type interfaceType, Type implementationType);
+
+        void Register(Type interfaceType, Func<object> instanceCreator);
+
+        void Register<T>(Func<object> instanceCreator) where T : IFluentAnnotation;
+
+        void Register<TInt, TImpl>() 
+            where TImpl : IFluentAnnotation, new()
+            where TInt : IFluentAnnotation;
 
         bool IsTypeRegistered(Type type);
     }

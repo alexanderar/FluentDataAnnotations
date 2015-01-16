@@ -17,7 +17,7 @@ namespace FluentDataAnnotations
     /// <typeparam name="T">
     /// </typeparam>
 
-    public interface IFluentAnnotation<T>
+    public interface IFluentAnnotation<T> : IFluentAnnotation
     {
         IList<Tuple<Func<T, bool>, Action>> GetConditionalActions();
     }
