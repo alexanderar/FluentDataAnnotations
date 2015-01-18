@@ -38,13 +38,13 @@ namespace FluentDataAnnotations
         /// <param name="isReadOnly">
         /// The is read only.
         /// </param>
-        /// <param name="displayAsDisabledInput">
-        /// The display as disabled input.
+        /// <param name="displayAsReadOnlyInput">
+        /// The display as read only input.
         /// </param>
-        public ReadOnlyFormat(bool isReadOnly, bool displayAsDisabledInput)
+        public ReadOnlyFormat(bool isReadOnly, bool displayAsReadOnlyInput)
         {
             this._isReadOnly = isReadOnly;
-            this.DisplayAsDisabledInput = displayAsDisabledInput;
+            this.DisplayAsReadOnlyInput = displayAsReadOnlyInput;
         }
 
         /// <summary>
@@ -53,13 +53,13 @@ namespace FluentDataAnnotations
         /// <param name="isReadOnly">
         /// The is read only.
         /// </param>
-        /// <param name="displayAsDisabledInput">
+        /// <param name="displayAsReadOnlyInput">
         /// The display as disabled input.
         /// </param>
-        public ReadOnlyFormat(Func<bool> isReadOnly, bool displayAsDisabledInput)
+        public ReadOnlyFormat(Func<bool> isReadOnly, bool displayAsReadOnlyInput)
         {
             this._isReadOnlyFunc = isReadOnly;
-            this.DisplayAsDisabledInput = displayAsDisabledInput;
+            this.DisplayAsReadOnlyInput = displayAsReadOnlyInput;
         }
 
         #endregion
@@ -67,9 +67,9 @@ namespace FluentDataAnnotations
         #region Properties
 
         /// <summary>
-        /// Gets a value indicating whether display as disabled input.
+        /// Gets a value indicating whether display as read only input.
         /// </summary>
-        internal bool DisplayAsDisabledInput { get; private set; }
+        internal bool DisplayAsReadOnlyInput { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether is read only.

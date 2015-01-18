@@ -1,6 +1,4 @@
-﻿@using System
-@using System.Collections.Generic
-@using System.Web.Mvc
+﻿@using System.Web.Mvc
 @using System.Web.Mvc.Html
 @using FluentDataAnnotations
 
@@ -18,8 +16,8 @@
 @{
     var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     if (ViewData.ModelMetadata.IsReadOnly)
-    {               
-        props["disabled"] = "disabled";      
+    {
+        props["readonly"] = "readonly";      
     }
 
     bool? value = null;

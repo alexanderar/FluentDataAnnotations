@@ -512,7 +512,7 @@ namespace FluentDataAnnotations
         /// <param name="isReadOnly">
         /// Function that returns a boolean that indicates whether the property should be displayed as read only property.
         /// </param>
-        /// <param name="displayAsDisabledInput">
+        /// <param name="displayAsReadOnlyInput">
         ///  If read only is set to true, indicates whether to render the property as disabled input.
         ///  If set to true, the property will be rendered as a disabled input tag.
         ///  If set to false, the property will be rendered by using  @Html.Encode().
@@ -520,9 +520,9 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetReadOnly(Func<bool> isReadOnly, bool displayAsDisabledInput = true)
+        public MemberMetadata SetReadOnly(Func<bool> isReadOnly, bool displayAsReadOnlyInput = true)
         {
-            this._isReadOnly = new ReadOnlyFormat(isReadOnly, displayAsDisabledInput);
+            this._isReadOnly = new ReadOnlyFormat(isReadOnly, displayAsReadOnlyInput);
 
             return this;
         }
@@ -533,7 +533,7 @@ namespace FluentDataAnnotations
         /// <param name="isReadOnly">
         /// indicates whether the property should be displayed as read only property.
         /// </param>
-        /// <param name="displayAsDisabledInput">
+        /// <param name="displayAsReadOnlyInput">
         ///  If read only is set to true, indicates whether to render the property as disabled input.
         ///  If set to true, the property will be rendered as a disabled input tag.
         ///  If set to false, the property will be rendered by using  @Html.Encode().
@@ -541,9 +541,9 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetReadOnly(bool isReadOnly, bool displayAsDisabledInput = true)
+        public MemberMetadata SetReadOnly(bool isReadOnly, bool displayAsReadOnlyInput = true)
         {
-            this._isReadOnly = new ReadOnlyFormat(isReadOnly, displayAsDisabledInput);
+            this._isReadOnly = new ReadOnlyFormat(isReadOnly, displayAsReadOnlyInput);
             return this;
         }
 

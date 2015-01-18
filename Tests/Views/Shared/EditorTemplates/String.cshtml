@@ -16,7 +16,7 @@
     var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     if (ViewData.ModelMetadata.IsReadOnly)
     {
-        props["disabled"] = "disabled";
+        props["readonly"] = "readonly";
     } 
     props["class"] = props.ContainsKey("class") ? props["class"].ToString() + " text-box single-line" : "text-box single-line";
     

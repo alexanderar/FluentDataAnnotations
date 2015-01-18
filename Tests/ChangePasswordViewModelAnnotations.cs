@@ -24,9 +24,6 @@ namespace WebApplication1
                 .SetShowForDisplay(() => true)
                 .SetDisplayFormat("Custom format {0}", true);
 
-            this.When(x => x.ConfirmPassword.StartsWith("123"),
-                () => this.For(m=>m.ConfirmPassword).SetDisplayFormat("Custom format for password that starts with 123 {0}"));
-
             For(x => x.HiddenTest).SetHiddenInput();
 
             For(x => x.Time).SetDisplayFormat("{0:MM.dd.yyyy hh:mm:ss}", true).SetReadOnly(true, false);

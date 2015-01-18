@@ -241,6 +241,13 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            var selectItems = new List<SelectListItem>();
+            for (int i = 0; i < 10; i++)
+            {
+                selectItems.Add(new SelectListItem { Text = "value " + i, Value = i.ToString() });
+            }
+            model.Ids = selectItems;
+
             if (!ModelState.IsValid)
             {
                 return View(model);

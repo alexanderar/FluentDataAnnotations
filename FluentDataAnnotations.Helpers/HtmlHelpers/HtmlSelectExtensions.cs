@@ -1287,7 +1287,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                                : MvcHtmlString.Empty;
                 }
 
-                htmlAttributes["disabled"] = "disabled";
+                htmlAttributes["readonly"] = "readonly";
             }
 
             return null;

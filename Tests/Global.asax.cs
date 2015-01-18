@@ -31,7 +31,7 @@ namespace WebApplication1
 
             var container = new Container();
 
-            //container.RegisterFluentAnnotations();
+            container.RegisterFluentAnnotations();
             // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 

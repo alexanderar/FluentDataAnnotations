@@ -331,7 +331,7 @@ namespace FluentDataAnnotations
             if (readOnlyFormat != null)
             {
                 metadata.IsReadOnly = metadata.IsReadOnly || readOnlyFormat.IsReadOnly;
-                if (readOnlyFormat.DisplayAsDisabledInput)
+                if (readOnlyFormat.DisplayAsReadOnlyInput)
                 {
                     metadata.AdditionalValues[Utilities.DisplayAsDisabledInputKey] = true;
                 }
