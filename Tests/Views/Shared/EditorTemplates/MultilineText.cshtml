@@ -10,6 +10,7 @@
 @if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey(Utilities.DisplayAsDisabledInputKey))
 {
     @Html.Encode(ViewData.TemplateInfo.FormattedModelValue)
+    @Html.Hidden("", ViewData.TemplateInfo.FormattedModelValue)
     return;
 }
 
@@ -17,7 +18,7 @@
     var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     if (ViewData.ModelMetadata.IsReadOnly)
     {
-        props["disabled"] = "disabled";
+        props["readonly"] = "readonly";
     } 
     props["class"] = props.ContainsKey("class") ? props["class"] + " text-box single-line" : "text-box single-line";
     @Html.TextArea("", ViewData.TemplateInfo.FormattedModelValue.ToString(), 0, 0, props)
