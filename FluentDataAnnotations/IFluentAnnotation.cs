@@ -8,18 +8,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace FluentDataAnnotations
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// The FluentAnnotation interface.
     /// </summary>
     /// <typeparam name="T">
+    /// Type of model
     /// </typeparam>
-
     public interface IFluentAnnotation<T> : IFluentAnnotation
     {
-        IList<Tuple<Func<T, bool>, Action>> GetConditionalActions();
     }
 
     /// <summary>

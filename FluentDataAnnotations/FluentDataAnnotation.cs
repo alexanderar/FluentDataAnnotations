@@ -150,26 +150,6 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Defines a condition for setting the annotations 
-        /// </summary>
-        /// <param name="predicate">
-        /// The predicate.
-        /// </param>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        public void When(Func<T, bool> predicate, Action action)
-        {
-            var modelTypeName = typeof(T).FullName;
-            if (!this._modelActions.ContainsKey(modelTypeName))
-            {
-                this._modelActions.Add(modelTypeName, new List<Tuple<Func<T, bool>, Action>>());
-            }
-
-            this._modelActions[modelTypeName].Add(new Tuple<Func<T, bool>, Action>(predicate, action));
-        }
-
-        /// <summary>
         /// The get actions.
         /// </summary>
         /// <returns>
