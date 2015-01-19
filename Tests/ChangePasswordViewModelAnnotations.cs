@@ -32,7 +32,7 @@ namespace WebApplication1
 
             For(m => m.Phone).SetReadOnly(true)
                 .SetDisplayName("Phone")
-                .ApplyValueTransform((s) => Regex.Replace(s, @"(?<=\d{1)\d(?=\d{3})", "*", RegexOptions.Compiled));
+                .ApplyValueTransform((s) => Regex.Replace(s, @"(?<=\d{1})\d(?=\d{3})", "*", RegexOptions.Compiled));
 
             For(x => x.OldPassword).SetDisplayName(() => "Fluent Old Password (Function)").SetShowForEdit(() => true)
                 .SetShowForDisplay(() => true)
