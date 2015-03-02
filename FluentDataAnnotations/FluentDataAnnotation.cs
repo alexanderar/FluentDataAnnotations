@@ -31,12 +31,6 @@ namespace FluentDataAnnotations
         private readonly Dictionary<string, MemberMetadata> _modelMetadata = new Dictionary<string, MemberMetadata>();
 
         /// <summary>
-        /// The _model actions.
-        /// </summary>
-        private readonly Dictionary<string, IList<Tuple<Func<T, bool>, Action>>> _modelActions
-            = new Dictionary<string, IList<Tuple<Func<T, bool>, Action>>>();
-
-        /// <summary>
         ///     The camel case regular expression.
         /// </summary>
         private readonly Regex _camelCaseRegex = new Regex(@"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", RegexOptions.Compiled);
@@ -147,18 +141,6 @@ namespace FluentDataAnnotations
             }
 
             return this._modelMetadata[member.Member.Name];
-        }
-
-        /// <summary>
-        /// The get actions.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IList"/>.
-        /// </returns>
-        public IList<Tuple<Func<T, bool>, Action>> GetConditionalActions()
-        {
-            var modelTypeName = typeof(T).FullName;
-            return this._modelActions.ContainsKey(modelTypeName) ? this._modelActions[modelTypeName] : null;
         }
 
         /// <summary>
