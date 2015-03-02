@@ -221,16 +221,7 @@ namespace WebApplication1.Controllers
                                 NulableBoolean = true,
                                 SelectedIds = 5,
                                 Phone = "029917064"
-                            };
-            var selectItems = new List<SelectListItem>();
-            for (int i = 0; i < 10; i++)
-            {
-                selectItems.Add(new SelectListItem { Text = "value " + i, Value = i.ToString() });               
-            }
-
-            selectItems.FirstOrDefault(i => i.Value.Equals("5", StringComparison.OrdinalIgnoreCase)).Selected = true;
-
-            model.Ids = selectItems;
+                            };            
            
             return View(model);
         }

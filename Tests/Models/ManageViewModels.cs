@@ -57,10 +57,9 @@ namespace WebApplication1.Models
         //[Display(Name = "New password")]
         public string NewPassword { get; set; }
 
-        //[DataType(DataType.Password)]
+
         [Display(Name = "Confirm new password")] 
-        //[System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
-        //[DisplayFormat(DataFormatString = "custom from attribute: {0}", ApplyFormatInEditMode = true)]
+
         public string ConfirmPassword { get; set; }
 
         public int HiddenTest { get; set; }

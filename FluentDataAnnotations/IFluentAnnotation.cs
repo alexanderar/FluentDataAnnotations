@@ -8,6 +8,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace FluentDataAnnotations
 {
+    using System.Collections.Generic;
+    using System.Web.Mvc;
+
     /// <summary>
     /// The FluentAnnotation interface.
     /// </summary>
@@ -123,6 +126,17 @@ namespace FluentDataAnnotations
         /// The <see cref="string"/>.
         /// </returns>
         string UIHint(string propName);
+
+        /// <summary>
+        /// The select list for drop down.
+        /// </summary>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList{T}"/>.
+        /// </returns>
+        IList<SelectListItem> SelectListForDropDown(string propName);
 
         /// <summary>
         /// The value transform.

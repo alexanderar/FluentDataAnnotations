@@ -12,8 +12,8 @@ namespace FluentDataAnnotations
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Text.RegularExpressions;
+    using System.Web.Mvc;
 
     /// <summary>
     /// The fluent data annotation.
@@ -174,6 +174,25 @@ namespace FluentDataAnnotations
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// The select list for drop down.
+        /// </summary>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList"/>.
+        /// </returns>
+        public IList<SelectListItem> SelectListForDropDown(string propName)
+        {
+            if (this._modelMetadata.ContainsKey(propName))
+            {
+                return this._modelMetadata[propName].SelectListForDropDown;
+            }
+
+            return null;
         }
 
         /// <summary>

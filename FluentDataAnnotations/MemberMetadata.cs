@@ -9,8 +9,10 @@
 namespace FluentDataAnnotations
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Reflection;
+    using System.Web.Mvc;
 
     /// <summary>
     ///     The fluent member meta-data.
@@ -113,6 +115,23 @@ namespace FluentDataAnnotations
         ///     The is editable function.
         /// </summary>
         private Func<bool> _showForEditFunc;
+
+        /// <summary>
+        /// The _is drop down.
+        /// </summary>
+        private bool _isDropDown;
+
+        /// <summary>
+        /// The _select list drop down func.
+        /// </summary>
+        private Func<IList<SelectListItem>> _selectListDropDownFunc;
+
+        /// <summary>
+        /// The _select list drop down.
+        /// </summary>
+        private IList<SelectListItem> _selectListDropDown;
+
+
 
         #endregion
 
@@ -295,6 +314,28 @@ namespace FluentDataAnnotations
         ///     Gets the value format function
         /// </summary>
         internal ValueTransform ValueTransform { get; private set; }
+
+        /// <summary>
+        /// Gets the select list for drop down.
+        /// </summary>
+        internal IList<SelectListItem> SelectListForDropDown
+        {
+            get
+            {
+                if (!this._isDropDown || 
+                    (this._selectListDropDown == null && this._selectListDropDownFunc == null))
+                {
+                    return null;
+                }
+
+                if (this._selectListDropDownFunc != null)
+                {
+                    this._selectListDropDown = this._selectListDropDownFunc();
+                }
+
+                return this._selectListDropDown;
+            }
+        }
 
         #endregion
 
@@ -619,6 +660,20 @@ namespace FluentDataAnnotations
         public MemberMetadata SetUIHint(string uiHint)
         {
             this.UIHint = uiHint;
+            return this;
+        }
+
+        public MemberMetadata SetDropDown(Func<IList<SelectListItem>> selectListFunc)
+        {
+            this._selectListDropDownFunc = selectListFunc;
+            this._isDropDown = true;
+            return this;
+        }
+
+        public MemberMetadata SetDropDown(IList<SelectListItem> selectList)
+        {
+            this._selectListDropDown = selectList;
+            this._isDropDown = true;
             return this;
         }
 

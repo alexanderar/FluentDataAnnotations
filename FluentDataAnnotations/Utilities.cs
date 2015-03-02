@@ -30,6 +30,10 @@ namespace FluentDataAnnotations
         /// </summary>
         public const string ShowLabelForEditKey = "FluentDataAnnotations.ShowLabelForEdit";
 
+        public const string SelectListKey = "FluentDataAnnotations.SelectListKey";
+
+        public const string DropDown = "FluentDataAnnotations.DropDown";
+
         #endregion
 
         #region Public Methods and Operators

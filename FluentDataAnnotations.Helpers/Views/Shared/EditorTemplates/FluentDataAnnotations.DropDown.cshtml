@@ -1,0 +1,33 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using FluentDataAnnotations
+@using FluentDataAnnotations.Helpers.HtmlHelpers
+
+@if (!ViewData.ModelMetadata.ShowForEdit)
+{
+    return;
+}
+
+@if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey(Utilities.DisplayAsDisabledInputKey))
+{
+    @Html.Encode(ViewData.TemplateInfo.FormattedModelValue)
+    @Html.Hidden("", ViewData.TemplateInfo.FormattedModelValue)
+    return;
+}
+@{
+    var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+    if (ViewData.ModelMetadata.IsReadOnly)
+    {
+        props["readonly"] = "readonly";
+    }
+
+    var selectListKey = ViewData.ModelMetadata.PropertyName + Utilities.SelectListKey;
+    @Html.SmartDropDownList("", (IList<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], props)
+}
+
+
+
+
+
+
+

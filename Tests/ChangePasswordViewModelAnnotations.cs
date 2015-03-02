@@ -8,6 +8,7 @@ namespace WebApplication1
 {
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Web.Mvc;
 
     using FluentDataAnnotations;
 
@@ -31,8 +32,7 @@ namespace WebApplication1
             For(x => x.NulableBoolean).SetReadOnly(true);
 
             For(m => m.Phone).SetReadOnly(true)
-                .SetDisplayName("Phone")
-                .ApplyValueTransform((s) => Regex.Replace(s, @"(?<=\d{1})\d(?=\d{3})", "*", RegexOptions.Compiled));
+                .SetDisplayName("Phone").ApplyValueTransform((s) => Regex.Replace(s, @"(?<=\d{1})\d(?=\d{3})", "*", RegexOptions.Compiled));
 
             For(x => x.OldPassword).SetDisplayName(() => "Fluent Old Password (Function)").SetShowForEdit(() => true)
                 .SetShowForDisplay(() => true)
@@ -47,10 +47,23 @@ namespace WebApplication1
                 .SetShowForEdit(() => true)
                 .SetShowForDisplay(() => true);
 
-            For(p => p.SelectedIds).SetDisplayName("Dropdown").SetReadOnly(
+            For(p => p.SelectedIds).SetDisplayName("Dropdown").SetDropDown(GetIdsList).SetReadOnly(
                 () => Thread.CurrentPrincipal.Identity.Name.Equals(
                     "alex.art84@gmail.com",
                     StringComparison.OrdinalIgnoreCase));
+        }
+
+        private IList<SelectListItem> GetIdsList()
+        {
+            var selectItems = new List<SelectListItem>();
+            for (int i = 0; i < 10; i++)
+            {
+                selectItems.Add(new SelectListItem { Text = "value " + i, Value = i.ToString() });
+            }
+
+            selectItems.FirstOrDefault(i => i.Value.Equals("5", StringComparison.OrdinalIgnoreCase)).Selected = true;
+
+            return selectItems;
         }
     }
 }

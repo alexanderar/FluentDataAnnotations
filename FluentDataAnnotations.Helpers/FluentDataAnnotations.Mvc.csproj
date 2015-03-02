@@ -97,6 +97,7 @@
     <Content Include="Views\Shared\EditorTemplates\UInt32.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\UInt64.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Url.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FluentDataAnnotations.DropDown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentDataAnnotations\FluentDataAnnotations.Core.csproj">

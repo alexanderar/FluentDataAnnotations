@@ -86,7 +86,7 @@ namespace FluentDataAnnotations
                 {
                     this.SetDataTypeAndDisplayFormat(attributesList, metadataContainer, propertyName, modelAccessor);
                     this.SetHiddenInput(attributesList, metadataContainer, propertyName);
-                    this.SetUIHint(attributesList, metadataContainer, propertyName);
+                    this.SetUIHint(attributesList, metadataContainer, propertyName);    
                 }
             }
 
@@ -131,6 +131,7 @@ namespace FluentDataAnnotations
                 this.SetIsReadOnly(metadata, metadataContainer, propertyDescriptor.Name);
                 this.SetShowForDisplay(metadata, metadataContainer, propertyDescriptor.Name);
                 this.SetShowForEdit(metadata, metadataContainer, propertyDescriptor.Name);
+                this.SetMetadataForDropDown(metadata, metadataContainer, propertyDescriptor.Name);
             }
 
             return metadata;
@@ -399,6 +400,25 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
+        /// Set Metadata for DropDown.
+        /// </summary>
+        /// <param name="metadataContainer">
+        /// The metadata container.
+        /// </param>
+        /// <param name="propertyName">
+        /// The property name.
+        /// </param>
+        private void SetMetadataForDropDown(ModelMetadata metadata, IFluentAnnotation metadataContainer, string propertyName)
+        {
+            var selectList = metadataContainer.SelectListForDropDown(propertyName);
+            if (selectList != null)
+            {
+                metadata.TemplateHint = Utilities.DropDown;
+                metadata.AdditionalValues[propertyName + Utilities.SelectListKey] = selectList;
+            }           
+        }
+
+        /// <summary>
         /// The set ui hint.
         /// </summary>
         /// <param name="attributes">
@@ -410,7 +430,7 @@ namespace FluentDataAnnotations
         /// <param name="propertyName">
         /// The property name.
         /// </param>
-        private void SetUIHint(List<Attribute> attributes, IFluentAnnotation metadataContainer, string propertyName)
+        private void SetUIHint(IList<Attribute> attributes, IFluentAnnotation metadataContainer, string propertyName)
         {
             if (!attributes.OfType<UIHintAttribute>().Any())
             {
