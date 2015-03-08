@@ -11,6 +11,7 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Web.Compilation;
@@ -61,16 +62,28 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
         /// The assemblies.
         /// </param>
         /// <returns>
-        /// The <see cref="IEnumerable"/>.
+        /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
         private static IEnumerable<Type> GetAnnotationTypes(IEnumerable<Assembly> assemblies)
         {
-            Type t = typeof(IFluentAnnotation);
-            return
-                assemblies.Where(x => !x.IsDynamic)
-                    .SelectMany(x => x.GetExportedTypes())
-                    .Where(x => t.IsAssignableFrom(x) && !x.IsAbstract && !x.IsGenericTypeDefinition)
-                    .ToArray();
+            Type validatorType = typeof(IFluentAnnotation);
+
+            var types = new List<Type>();
+            foreach (var assembly in assemblies.Where(x => !x.IsDynamic))
+            {
+                try
+                {
+                    var currentTypes = assembly.GetExportedTypes()
+                        .Where(x => validatorType.IsAssignableFrom(x) && !x.IsAbstract && !x.IsGenericTypeDefinition)
+                        .ToArray();
+                    types.AddRange(currentTypes);
+                }
+                catch (FileNotFoundException)
+                {
+
+                }
+            }
+            return types.Distinct().ToArray();
         }
 
         #endregion
