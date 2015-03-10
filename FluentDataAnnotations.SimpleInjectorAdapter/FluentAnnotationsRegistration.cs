@@ -32,9 +32,12 @@ namespace FluentDataAnnotations.SimpleInjectorAdapter
         /// <param name="container">
         /// The container.
         /// </param>
-        public static void RegisterFluentAnnotations(this Container container)
+        public static void RegisterFluentAnnotations(this Container container, params Assembly[] assemblies)
         {
-            Assembly[] assemblies = BuildManager.GetReferencedAssemblies().OfType<Assembly>().ToArray();
+            if (assemblies == null || assemblies.Length == 0)
+            {
+                assemblies = BuildManager.GetReferencedAssemblies().OfType<Assembly>().ToArray();
+            }
 
             IEnumerable<Type> displayAnnotationTypes = GetAnnotationTypes(assemblies);
 
