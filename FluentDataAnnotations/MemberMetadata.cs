@@ -42,7 +42,7 @@ namespace FluentDataAnnotations
         private Func<string> _descriptionFunc;
 
         /// <summary>
-        /// The _display as disabled input.
+        ///     The _display as disabled input.
         /// </summary>
         private bool _displayAsDisabledInput;
 
@@ -92,9 +92,24 @@ namespace FluentDataAnnotations
         private bool _isDisplayNameSet;
 
         /// <summary>
+        ///     The _is drop down.
+        /// </summary>
+        private bool _isDropDown;
+
+        /// <summary>
         ///     The is read only.
         /// </summary>
         private ReadOnlyFormat _isReadOnly;
+
+        /// <summary>
+        ///     The _select list drop down.
+        /// </summary>
+        private IList<SelectListItem> _selectListDropDown;
+
+        /// <summary>
+        ///     The _select list drop down func.
+        /// </summary>
+        private Func<IList<SelectListItem>> _selectListDropDownFunc;
 
         /// <summary>
         ///     The is visible.
@@ -115,23 +130,6 @@ namespace FluentDataAnnotations
         ///     The is editable function.
         /// </summary>
         private Func<bool> _showForEditFunc;
-
-        /// <summary>
-        /// The _is drop down.
-        /// </summary>
-        private bool _isDropDown;
-
-        /// <summary>
-        /// The _select list drop down func.
-        /// </summary>
-        private Func<IList<SelectListItem>> _selectListDropDownFunc;
-
-        /// <summary>
-        /// The _select list drop down.
-        /// </summary>
-        private IList<SelectListItem> _selectListDropDown;
-
-
 
         #endregion
 
@@ -243,7 +241,7 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Gets a value indicating whether hidden input.
+        ///     Gets a value indicating whether hidden input.
         /// </summary>
         internal bool HiddenInput { get; private set; }
 
@@ -262,6 +260,27 @@ namespace FluentDataAnnotations
         ///     Gets the Member.
         /// </summary>
         internal MemberInfo Member { get; private set; }
+
+        /// <summary>
+        ///     Gets the select list for drop down.
+        /// </summary>
+        internal IList<SelectListItem> SelectListForDropDown
+        {
+            get
+            {
+                if (!this._isDropDown || (this._selectListDropDown == null && this._selectListDropDownFunc == null))
+                {
+                    return null;
+                }
+
+                if (this._selectListDropDownFunc != null)
+                {
+                    this._selectListDropDown = this._selectListDropDownFunc();
+                }
+
+                return this._selectListDropDown;
+            }
+        }
 
         /// <summary>
         ///     Gets a value indicating whether is visible on display.
@@ -315,28 +334,6 @@ namespace FluentDataAnnotations
         /// </summary>
         internal ValueTransform ValueTransform { get; private set; }
 
-        /// <summary>
-        /// Gets the select list for drop down.
-        /// </summary>
-        internal IList<SelectListItem> SelectListForDropDown
-        {
-            get
-            {
-                if (!this._isDropDown || 
-                    (this._selectListDropDown == null && this._selectListDropDownFunc == null))
-                {
-                    return null;
-                }
-
-                if (this._selectListDropDownFunc != null)
-                {
-                    this._selectListDropDown = this._selectListDropDownFunc();
-                }
-
-                return this._selectListDropDown;
-            }
-        }
-
         #endregion
 
         #region Public Methods and Operators
@@ -353,11 +350,13 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata ApplyValueTransform(Func<string, string> valueTransformFunc, bool applyTransformInEditMode = true)
+        public MemberMetadata ApplyValueTransform(
+            Func<string, string> valueTransformFunc, 
+            bool applyTransformInEditMode = true)
         {
             this.ValueTransform = new ValueTransform
                                       {
-                                          ValueTransformFunc = valueTransformFunc,
+                                          ValueTransformFunc = valueTransformFunc, 
                                           ApplyTransformInEditMode = applyTransformInEditMode
                                       };
             return this;
@@ -396,7 +395,7 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets description for a property 
+        /// Sets description for a property
         /// </summary>
         /// <param name="description">
         /// The description.
@@ -411,7 +410,7 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets description for a property 
+        /// Sets description for a property
         /// </summary>
         /// <param name="description">
         /// The function that returns a description.
@@ -536,6 +535,38 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
+        /// The set drop down.
+        /// </summary>
+        /// <param name="selectListFunc">
+        /// The select list func.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MemberMetadata"/>.
+        /// </returns>
+        public MemberMetadata SetDropDown(Func<IList<SelectListItem>> selectListFunc)
+        {
+            this._selectListDropDownFunc = selectListFunc;
+            this._isDropDown = true;
+            return this;
+        }
+
+        /// <summary>
+        /// The set drop down.
+        /// </summary>
+        /// <param name="selectList">
+        /// The select list.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MemberMetadata"/>.
+        /// </returns>
+        public MemberMetadata SetDropDown(IList<SelectListItem> selectList)
+        {
+            this._selectListDropDown = selectList;
+            this._isDropDown = true;
+            return this;
+        }
+
+        /// <summary>
         ///     Applies hidden input attribute to a property.
         /// </summary>
         /// <returns>
@@ -548,15 +579,15 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets the value that indicates whether the property should be displayed as read only property. 
+        /// Sets the value that indicates whether the property should be displayed as read only property.
         /// </summary>
         /// <param name="isReadOnly">
         /// Function that returns a boolean that indicates whether the property should be displayed as read only property.
         /// </param>
         /// <param name="displayAsReadOnlyInput">
-        ///  If read only is set to true, indicates whether to render the property as disabled input.
-        ///  If set to true, the property will be rendered as a disabled input tag.
-        ///  If set to false, the property will be rendered by using  @Html.Encode().
+        /// If read only is set to true, indicates whether to render the property as disabled input.
+        ///     If set to true, the property will be rendered as a disabled input tag.
+        ///     If set to false, the property will be rendered by using  @Html.Encode().
         /// </param>
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
@@ -575,9 +606,9 @@ namespace FluentDataAnnotations
         /// indicates whether the property should be displayed as read only property.
         /// </param>
         /// <param name="displayAsReadOnlyInput">
-        ///  If read only is set to true, indicates whether to render the property as disabled input.
-        ///  If set to true, the property will be rendered as a disabled input tag.
-        ///  If set to false, the property will be rendered by using  @Html.Encode().
+        /// If read only is set to true, indicates whether to render the property as disabled input.
+        ///     If set to true, the property will be rendered as a disabled input tag.
+        ///     If set to false, the property will be rendered by using  @Html.Encode().
         /// </param>
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
@@ -589,7 +620,8 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets the value that indicates whether to render this property in a display mode(For example when used Html.DiplayFor()).
+        /// Sets the value that indicates whether to render this property in a display mode(For example when used
+        ///     Html.DiplayFor()).
         /// </summary>
         /// <param name="isVisible">
         /// Indicates whether to render this property in a display mode
@@ -604,7 +636,8 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets the value that indicates whether to render this property in a display mode(For example when used Html.DiplayFor()).
+        /// Sets the value that indicates whether to render this property in a display mode(For example when used
+        ///     Html.DiplayFor()).
         /// </summary>
         /// <param name="isVisible">
         /// Function that returns a boolean that indicates whether to render this property in a display mode
@@ -619,7 +652,8 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets the value that indicates whether to render this property in a edit mode(For example when used Html.EditorFor()).
+        /// Sets the value that indicates whether to render this property in a edit mode(For example when used
+        ///     Html.EditorFor()).
         /// </summary>
         /// <param name="isEditable">
         /// Function that returns a boolean that indicates whether to render this property in a edit mode
@@ -634,7 +668,8 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// Sets the value that indicates whether to render this property in a edit mode(For example when used Html.EditorFor()).
+        /// Sets the value that indicates whether to render this property in a edit mode(For example when used
+        ///     Html.EditorFor()).
         /// </summary>
         /// <param name="isEditable">
         /// Indicates whether to render this property in a edit mode
@@ -660,20 +695,6 @@ namespace FluentDataAnnotations
         public MemberMetadata SetUIHint(string uiHint)
         {
             this.UIHint = uiHint;
-            return this;
-        }
-
-        public MemberMetadata SetDropDown(Func<IList<SelectListItem>> selectListFunc)
-        {
-            this._selectListDropDownFunc = selectListFunc;
-            this._isDropDown = true;
-            return this;
-        }
-
-        public MemberMetadata SetDropDown(IList<SelectListItem> selectList)
-        {
-            this._selectListDropDown = selectList;
-            this._isDropDown = true;
             return this;
         }
 

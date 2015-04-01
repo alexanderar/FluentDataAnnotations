@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace FluentDataAnnotations
 {
+    using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
 
@@ -19,6 +20,7 @@ namespace FluentDataAnnotations
     /// </typeparam>
     public interface IFluentAnnotation<T> : IFluentAnnotation
     {
+
     }
 
     /// <summary>
@@ -148,6 +150,17 @@ namespace FluentDataAnnotations
         /// The <see cref="ValueTransform"/>.
         /// </returns>
         ValueTransform ValueTransform(string propName);
+
+        /// <summary>
+        /// The get conditional actions.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList{T}"/>.
+        /// </returns>
+        IList<Tuple<Func<bool>, Action>> GetConditionalActions(object target);
 
         #endregion
     }

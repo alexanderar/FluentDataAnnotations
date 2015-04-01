@@ -84,6 +84,25 @@ namespace FluentDataAnnotations
 
                 if (metadataContainer != null)
                 {
+                    if (modelAccessor != null)
+                    {
+
+                        var target = modelAccessor.Target;
+                        var field = target.GetType().GetField("container");
+                        if (field != null)
+                        {
+                            var model = field.GetValue(target);
+                            var actions = metadataContainer.GetConditionalActions(model);
+                            foreach (var a in actions)
+                            {
+                                if (a.Item1())
+                                {
+                                    a.Item2();
+                                }
+                            }
+                        }                        
+                    }
+                    
                     this.SetDataTypeAndDisplayFormat(attributesList, metadataContainer, propertyName, modelAccessor);
                     this.SetHiddenInput(attributesList, metadataContainer, propertyName);
                     this.SetUIHint(attributesList, metadataContainer, propertyName);    
@@ -124,6 +143,12 @@ namespace FluentDataAnnotations
             IFluentAnnotation metadataContainer = this.GetFluentAnnotationContainer(
                 containerType.FullName, 
                 containerType.Assembly.FullName);
+
+            //if (modelAccessor != null)
+            //{
+            //    var target = modelAccessor.Target;
+            //}
+
             if (metadataContainer != null)
             {
                 this.SetDescription(metadata, metadataContainer, propertyDescriptor.Name);

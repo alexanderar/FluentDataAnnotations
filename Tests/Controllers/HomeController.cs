@@ -1,30 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="HomeController.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The home controller.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApplication1.Controllers
 {
+    using System;
+    using System.Web.Mvc;
+
+    using WebApplication1.Models;
+
+    /// <summary>
+    /// The home controller.
+    /// </summary>
     public class HomeController : Controller
     {
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The index.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        [HttpGet]
         public ActionResult Index()
         {
-            return View();
+            var model = new TestModel
+                            {
+                                ConfirmPassword = "Confirm 12345", 
+                                NewPassword = "new 12345", 
+                                OldPassword = "old 12345", 
+                                HiddenTest = 123, 
+                                Time = DateTime.Now, 
+                                NulableBoolean = true, 
+                                SelectedIds = 5, 
+                                Phone = "029917064", 
+                                ApplyAnnotations = true, 
+                            };
+            return this.View(model);
         }
 
-        public ActionResult About()
+        /// <summary>
+        /// The index.
+        /// </summary>
+        /// <param name="model">
+        /// The model.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        [HttpPost]
+        public ActionResult Index(TestModel model)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            return this.View(model);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+        #endregion
     }
 }

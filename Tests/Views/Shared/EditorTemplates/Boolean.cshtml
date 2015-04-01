@@ -18,7 +18,8 @@
     var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     if (ViewData.ModelMetadata.IsReadOnly)
     {
-        props["readonly"] = "readonly";      
+        props["disabled"] = "disabled";
+        @Html.Hidden("", ViewData.TemplateInfo.FormattedModelValue)
     }
 
     bool? value = null;
@@ -42,7 +43,7 @@
     }
     else
     {
-        props["class"] = props.ContainsKey("class") ? props["class"] + " check-box" : "check-box"; 
+        props["class"] = props.ContainsKey("class") ? props["class"] + " check-box" : "check-box";
         @Html.CheckBox("", value ?? false, props)
     }
 }

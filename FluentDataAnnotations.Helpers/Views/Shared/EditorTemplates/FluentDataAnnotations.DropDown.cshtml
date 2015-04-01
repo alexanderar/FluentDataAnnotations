@@ -18,16 +18,10 @@
     var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     if (ViewData.ModelMetadata.IsReadOnly)
     {
-        props["readonly"] = "readonly";
+        props["disabled"] = "disabled";
+        @Html.Hidden("", ViewData.TemplateInfo.FormattedModelValue)
     }
 
     var selectListKey = ViewData.ModelMetadata.PropertyName + Utilities.SelectListKey;
     @Html.SmartDropDownList("", (IList<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], props)
 }
-
-
-
-
-
-
-

@@ -11,7 +11,9 @@ namespace FluentDataAnnotations
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
+    using System.Runtime.Remoting.Messaging;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
 
@@ -29,6 +31,11 @@ namespace FluentDataAnnotations
         ///     The model meta-data.
         /// </summary>
         private readonly Dictionary<string, MemberMetadata> _modelMetadata = new Dictionary<string, MemberMetadata>();
+
+        /// <summary>
+        /// The _model actions.
+        /// </summary>
+        private readonly IList<Tuple<Func<T, bool>, Action>> _modelActions = new List<Tuple<Func<T, bool>, Action>>();
 
         /// <summary>
         ///     The camel case regular expression.
@@ -52,6 +59,19 @@ namespace FluentDataAnnotations
         {
             return this._modelMetadata.ContainsKey(propName) ? this._modelMetadata[propName].DataType : null;
         }
+
+        ///// <summary>
+        ///// The get conditional actions.
+        ///// </summary>
+        ///// <returns>
+        ///// The <see cref="IList{T}"/>.
+        ///// </returns>
+        //IFluentAnnotation.IList<Tuple<Func<T, bool>, Action>> GetConditionalActions()
+        //{
+        //    var modelTypeName = typeof(T).FullName;
+        //    return this._modelActions.ContainsKey(modelTypeName) ? this._modelActions[modelTypeName] : null;
+        //}
+
 
         /// <summary>
         /// The description.
@@ -141,6 +161,53 @@ namespace FluentDataAnnotations
             }
 
             return this._modelMetadata[member.Member.Name];
+        }
+
+        /// <summary>
+        /// The when.
+        /// </summary>
+        /// <param name="predicate">
+        /// The predicate.
+        /// </param>
+        /// <param name="action">
+        /// The action.
+        /// </param>
+        public void When(Func<T, bool> predicate, Action action)
+        {
+            this._modelActions.Add(new Tuple<Func<T, bool>, Action>(predicate, action));          
+        }
+
+        ///// <summary>
+        ///// The get conditional actions.
+        ///// </summary>
+        ///// <returns>
+        ///// The <see cref="IList{T}"/>.
+        ///// </returns>
+        //IList<Tuple<Func<T, bool>, Action>> IFluentAnnotation<T>.GetConditionalActions()
+        //{
+        //    return this._modelActions;
+        //}
+
+        /// <summary>
+        /// The get conditional actions.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList"/>.
+        /// </returns>
+        IList<Tuple<Func<bool>, Action>> IFluentAnnotation.GetConditionalActions(object target)
+        {
+            if (target == null)
+            {
+                return null;
+            }
+
+            var model = (T)target;
+            return target.GetType() == typeof(T) ?
+                this._modelActions.Select(t => new Tuple<Func<bool>, Action>(() => t.Item1(model), t.Item2)).ToList() 
+                : null;
         }
 
         /// <summary>

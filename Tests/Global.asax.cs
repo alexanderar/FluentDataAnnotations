@@ -8,7 +8,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
-using WebApplication1.Models;
 
 namespace WebApplication1
 {
@@ -31,15 +30,15 @@ namespace WebApplication1
 
             var container = new Container();
 
+
             container.RegisterFluentAnnotations();
+
             // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
             // This is an extension method from the integration package as well.
             container.RegisterMvcIntegratedFilterProvider();
-
            
-
             ModelMetadataProviders.Current = new FluentModelMetadataProvider(new SimpleInjectorAdapter(container));
 
             container.Verify();
