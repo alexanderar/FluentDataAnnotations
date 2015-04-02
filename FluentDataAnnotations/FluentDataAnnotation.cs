@@ -177,17 +177,6 @@ namespace FluentDataAnnotations
             this._modelActions.Add(new Tuple<Func<T, bool>, Action>(predicate, action));          
         }
 
-        ///// <summary>
-        ///// The get conditional actions.
-        ///// </summary>
-        ///// <returns>
-        ///// The <see cref="IList{T}"/>.
-        ///// </returns>
-        //IList<Tuple<Func<T, bool>, Action>> IFluentAnnotation<T>.GetConditionalActions()
-        //{
-        //    return this._modelActions;
-        //}
-
         /// <summary>
         /// The get conditional actions.
         /// </summary>
@@ -207,7 +196,7 @@ namespace FluentDataAnnotations
             var model = (T)target;
             return target.GetType() == typeof(T) ?
                 this._modelActions.Select(t => new Tuple<Func<bool>, Action>(() => t.Item1(model), t.Item2)).ToList() 
-                : null;
+                : new List<Tuple<Func<bool>, Action>>();
         }
 
         /// <summary>
