@@ -184,13 +184,13 @@ namespace FluentDataAnnotations
         /// The target.
         /// </param>
         /// <returns>
-        /// The <see cref="IList"/>.
+        /// The <see cref="IList{T}"/>.
         /// </returns>
         IList<Tuple<Func<bool>, Action>> IFluentAnnotation.GetConditionalActions(object target)
         {
             if (target == null)
             {
-                return null;
+                return new List<Tuple<Func<bool>, Action>>();
             }
 
             var model = (T)target;
