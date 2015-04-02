@@ -94,7 +94,7 @@ namespace WebApplication1
         /// The get ids list.
         /// </summary>
         /// <returns>
-        /// The <see cref="IList"/>.
+        /// The <see cref="IList{T}"/>.
         /// </returns>
         private IList<SelectListItem> GetIdsList()
         {
