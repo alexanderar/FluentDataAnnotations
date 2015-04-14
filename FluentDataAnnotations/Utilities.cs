@@ -8,6 +8,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace FluentDataAnnotations
 {
+    using System;
+    using System.Linq.Expressions;
+
     /// <summary>
     ///     The utilities.
     /// </summary>
@@ -50,6 +53,25 @@ namespace FluentDataAnnotations
         public static bool IsNullOrWhiteSpace(this string text)
         {
             return string.IsNullOrWhiteSpace(text);
+        }
+
+        /// <summary>
+        /// The get info.
+        /// </summary>
+        /// <param name="propSelector">
+        /// The prop selector.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <typeparam name="TProp">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MemberMetadata"/>.
+        /// </returns>
+        internal static MemberMetadata<T> GetInfo<T, TProp>(Expression<Func<T, TProp>> propSelector) where T : class
+        {
+            var body = propSelector.Body as MemberExpression;
+            return body != null ? new MemberMetadata<T>(body.Member) : null;
         }
 
         #endregion

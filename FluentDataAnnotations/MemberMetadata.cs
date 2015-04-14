@@ -11,13 +11,14 @@ namespace FluentDataAnnotations
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq.Expressions;
     using System.Reflection;
     using System.Web.Mvc;
 
     /// <summary>
     ///     The fluent member meta-data.
     /// </summary>
-    public class MemberMetadata
+    public class MemberMetadata<T> where T : class 
     {
         #region Fields
 
@@ -94,7 +95,7 @@ namespace FluentDataAnnotations
         /// <summary>
         ///     The _is drop down.
         /// </summary>
-        private bool _isDropDown;
+        protected internal bool _isDropDown;
 
         /// <summary>
         ///     The is read only.
@@ -109,7 +110,7 @@ namespace FluentDataAnnotations
         /// <summary>
         ///     The _select list drop down func.
         /// </summary>
-        private Func<IList<SelectListItem>> _selectListDropDownFunc;
+        protected internal Func<IList<SelectListItem>> _selectListDropDownFunc;
 
         /// <summary>
         ///     The is visible.
@@ -169,6 +170,30 @@ namespace FluentDataAnnotations
 
                 return null;
             }
+        }
+
+        private Func<T, IList<SelectListItem>> _selectListDropDownFromModelFunc;
+
+        internal Func<T, IList<SelectListItem>> SelectListForDropDownFromModel
+        {
+            get
+            {
+                if (!this._isDropDown || (this._selectListDropDownFromModelFunc == null))
+                {
+                    return null;
+                }
+
+
+                return this._selectListDropDownFromModelFunc;
+            }
+        }
+
+        public MemberMetadata<T> SetDropDown(Expression<Func<T, IList<SelectListItem>>> property)
+        {
+            var func = property.Compile();
+            this._selectListDropDownFromModelFunc = func;
+            this._isDropDown = true;
+            return this;
         }
 
         /// <summary>
@@ -350,7 +375,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata ApplyValueTransform(
+        public MemberMetadata<T> ApplyValueTransform(
             Func<string, string> valueTransformFunc, 
             bool applyTransformInEditMode = true)
         {
@@ -371,7 +396,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDataType(DataType dataType)
+        public MemberMetadata<T> SetDataType(DataType dataType)
         {
             this._dataType = dataType;
             this._isDataTypeSet = true;
@@ -387,7 +412,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDataType(string dataType)
+        public MemberMetadata<T> SetDataType(string dataType)
         {
             this._customDataType = dataType;
             this._isCustomDataTypeSet = true;
@@ -403,7 +428,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDescription(string description)
+        public MemberMetadata<T> SetDescription(string description)
         {
             this._description = description;
             return this;
@@ -418,7 +443,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDescription(Func<string> description)
+        public MemberMetadata<T> SetDescription(Func<string> description)
         {
             this._descriptionFunc = description;
             return this;
@@ -445,7 +470,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDisplayFormat(
+        public MemberMetadata<T> SetDisplayFormat(
             string displayFormat, 
             bool applyFormatInEditMode = false, 
             bool htmlEncode = false, 
@@ -485,7 +510,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDisplayFormat(
+        public MemberMetadata<T> SetDisplayFormat(
             Func<string> displayFormatFunc, 
             bool applyFormatInEditMode = true, 
             bool htmlEncode = false, 
@@ -513,7 +538,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDisplayName(Func<string> name)
+        public MemberMetadata<T> SetDisplayName(Func<string> name)
         {
             this._displayNameFunc = name;
             return this;
@@ -528,7 +553,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDisplayName(string name)
+        public MemberMetadata<T> SetDisplayName(string name)
         {
             this._displayName = name;
             return this;
@@ -543,7 +568,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDropDown(Func<IList<SelectListItem>> selectListFunc)
+        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc)
         {
             this._selectListDropDownFunc = selectListFunc;
             this._isDropDown = true;
@@ -559,7 +584,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetDropDown(IList<SelectListItem> selectList)
+        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList)
         {
             this._selectListDropDown = selectList;
             this._isDropDown = true;
@@ -572,7 +597,7 @@ namespace FluentDataAnnotations
         /// <returns>
         ///     The <see cref="MemberMetadata" />.
         /// </returns>
-        public MemberMetadata SetHiddenInput()
+        public MemberMetadata<T> SetHiddenInput()
         {
             this.HiddenInput = true;
             return this;
@@ -592,7 +617,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetReadOnly(Func<bool> isReadOnly, bool displayAsReadOnlyInput = true)
+        public MemberMetadata<T> SetReadOnly(Func<bool> isReadOnly, bool displayAsReadOnlyInput = true)
         {
             this._isReadOnly = new ReadOnlyFormat(isReadOnly, displayAsReadOnlyInput);
 
@@ -613,7 +638,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetReadOnly(bool isReadOnly, bool displayAsReadOnlyInput = true)
+        public MemberMetadata<T> SetReadOnly(bool isReadOnly, bool displayAsReadOnlyInput = true)
         {
             this._isReadOnly = new ReadOnlyFormat(isReadOnly, displayAsReadOnlyInput);
             return this;
@@ -629,7 +654,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetShowForDisplay(bool isVisible)
+        public MemberMetadata<T> SetShowForDisplay(bool isVisible)
         {
             this._showForDisplay = isVisible;
             return this;
@@ -645,7 +670,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetShowForDisplay(Func<bool> isVisible)
+        public MemberMetadata<T> SetShowForDisplay(Func<bool> isVisible)
         {
             this._showForDisplayFunc = isVisible;
             return this;
@@ -661,7 +686,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetShowForEdit(Func<bool> isEditable)
+        public MemberMetadata<T> SetShowForEdit(Func<bool> isEditable)
         {
             this._showForEditFunc = isEditable;
             return this;
@@ -677,7 +702,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetShowForEdit(bool isEditable)
+        public MemberMetadata<T> SetShowForEdit(bool isEditable)
         {
             this._showForEdit = isEditable;
             return this;
@@ -692,7 +717,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata SetUIHint(string uiHint)
+        public MemberMetadata<T> SetUIHint(string uiHint)
         {
             this.UIHint = uiHint;
             return this;

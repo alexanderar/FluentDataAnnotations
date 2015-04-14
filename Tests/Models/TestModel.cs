@@ -24,7 +24,7 @@
 
         public int SelectedIds { get; set; }
 
-        public IEnumerable<SelectListItem> Ids { get; set; }
+        public IList<SelectListItem> Ids { get; set; }
 
         public string Phone { get; set; }
 

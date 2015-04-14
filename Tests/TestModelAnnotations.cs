@@ -77,7 +77,7 @@ namespace WebApplication1
 
                         this.For(p => p.SelectedIds)
                             .SetDisplayName("Dropdown")
-                            .SetDropDown(this.GetIdsList)
+                            .SetDropDown(p => p.Ids)
                             .SetReadOnly(
                                 () =>
                                 Thread.CurrentPrincipal.Identity.Name.Equals(

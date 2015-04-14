@@ -6,14 +6,12 @@
 //   The fluent data annotation.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace FluentDataAnnotations
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Runtime.Remoting.Messaging;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
 
@@ -24,23 +22,27 @@ namespace FluentDataAnnotations
     /// View model type
     /// </typeparam>
     public abstract class FluentDataAnnotation<T> : IFluentAnnotation<T>
+        where T : class
     {
         #region Fields
 
         /// <summary>
-        ///     The model meta-data.
+        ///     The camel case regular expression.
         /// </summary>
-        private readonly Dictionary<string, MemberMetadata> _modelMetadata = new Dictionary<string, MemberMetadata>();
+        private readonly Regex _camelCaseRegex = new Regex(
+            @"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", 
+            RegexOptions.Compiled);
 
         /// <summary>
-        /// The _model actions.
+        ///     The _model actions.
         /// </summary>
         private readonly IList<Tuple<Func<T, bool>, Action>> _modelActions = new List<Tuple<Func<T, bool>, Action>>();
 
         /// <summary>
-        ///     The camel case regular expression.
+        ///     The model meta-data.
         /// </summary>
-        private readonly Regex _camelCaseRegex = new Regex(@"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", RegexOptions.Compiled);
+        private readonly Dictionary<string, MemberMetadata<T>> _modelMetadata =
+            new Dictionary<string, MemberMetadata<T>>();
 
         #endregion
 
@@ -66,12 +68,11 @@ namespace FluentDataAnnotations
         ///// <returns>
         ///// The <see cref="IList{T}"/>.
         ///// </returns>
-        //IFluentAnnotation.IList<Tuple<Func<T, bool>, Action>> GetConditionalActions()
-        //{
-        //    var modelTypeName = typeof(T).FullName;
-        //    return this._modelActions.ContainsKey(modelTypeName) ? this._modelActions[modelTypeName] : null;
-        //}
-
+        // IFluentAnnotation.IList<Tuple<Func<T, bool>, Action>> GetConditionalActions()
+        // {
+        // var modelTypeName = typeof(T).FullName;
+        // return this._modelActions.ContainsKey(modelTypeName) ? this._modelActions[modelTypeName] : null;
+        // }
 
         /// <summary>
         /// The description.
@@ -122,20 +123,6 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// The hidden input.
-        /// </summary>
-        /// <param name="propName">
-        /// The prop name.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        public bool HiddenInput(string propName)
-        {
-            return this._modelMetadata.ContainsKey(propName) && this._modelMetadata[propName].HiddenInput;
-        }
-
-        /// <summary>
         /// The for.
         /// </summary>
         /// <param name="propSelector">
@@ -147,9 +134,9 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata For<TProp>(Expression<Func<T, TProp>> propSelector)
+        public MemberMetadata<T> For<TProp>(Expression<Func<T, TProp>> propSelector)
         {
-            var member = GetInfo(propSelector);
+            MemberMetadata<T> member = Utilities.GetInfo(propSelector);
             if (member == null)
             {
                 throw new ArgumentException("propSelector");
@@ -164,39 +151,17 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// The when.
+        /// The hidden input.
         /// </summary>
-        /// <param name="predicate">
-        /// The predicate.
-        /// </param>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        public void When(Func<T, bool> predicate, Action action)
-        {
-            this._modelActions.Add(new Tuple<Func<T, bool>, Action>(predicate, action));          
-        }
-
-        /// <summary>
-        /// The get conditional actions.
-        /// </summary>
-        /// <param name="target">
-        /// The target.
+        /// <param name="propName">
+        /// The prop name.
         /// </param>
         /// <returns>
-        /// The <see cref="IList{T}"/>.
+        /// The <see cref="bool"/>.
         /// </returns>
-        IList<Tuple<Func<bool>, Action>> IFluentAnnotation.GetConditionalActions(object target)
+        public bool HiddenInput(string propName)
         {
-            if (target == null)
-            {
-                return new List<Tuple<Func<bool>, Action>>();
-            }
-
-            var model = (T)target;
-            return target.GetType() == typeof(T) ?
-                this._modelActions.Select(t => new Tuple<Func<bool>, Action>(() => t.Item1(model), t.Item2)).ToList() 
-                : new List<Tuple<Func<bool>, Action>>();
+            return this._modelMetadata.ContainsKey(propName) && this._modelMetadata[propName].HiddenInput;
         }
 
         /// <summary>
@@ -233,45 +198,6 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
-        /// The select list for drop down.
-        /// </summary>
-        /// <param name="propName">
-        /// The prop name.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IList"/>.
-        /// </returns>
-        public IList<SelectListItem> SelectListForDropDown(string propName)
-        {
-            if (this._modelMetadata.ContainsKey(propName))
-            {
-                return this._modelMetadata[propName].SelectListForDropDown;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// The value transform.
-        /// </summary>
-        /// <param name="propName">
-        /// The property name.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ValueTransform"/>.
-        /// </returns>
-        public ValueTransform ValueTransform(string propName)
-        {
-            if (this._modelMetadata.ContainsKey(propName))
-            {
-                return this._modelMetadata[propName].ValueTransform;
-            }
-
-            return null;
-        }
-
-
-        /// <summary>
         /// The is visible on edit.
         /// </summary>
         /// <param name="propName">
@@ -304,27 +230,103 @@ namespace FluentDataAnnotations
             return this._modelMetadata.ContainsKey(propName) ? this._modelMetadata[propName].UIHint : null;
         }
 
+        /// <summary>
+        /// The value transform.
+        /// </summary>
+        /// <param name="propName">
+        /// The property name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ValueTransform"/>.
+        /// </returns>
+        public ValueTransform ValueTransform(string propName)
+        {
+            if (this._modelMetadata.ContainsKey(propName))
+            {
+                return this._modelMetadata[propName].ValueTransform;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The when.
+        /// </summary>
+        /// <param name="predicate">
+        /// The predicate.
+        /// </param>
+        /// <param name="action">
+        /// The action.
+        /// </param>
+        public void When(Func<T, bool> predicate, Action action)
+        {
+            this._modelActions.Add(new Tuple<Func<T, bool>, Action>(predicate, action));
+        }
+
+        #endregion
+
+        #region Explicit Interface Methods
+
+        /// <summary>
+        /// The get conditional actions.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList{T}"/>.
+        /// </returns>
+        IList<Tuple<Func<bool>, Action>> IFluentAnnotation.GetConditionalActions(object target)
+        {
+            if (target == null)
+            {
+                return new List<Tuple<Func<bool>, Action>>();
+            }
+
+            var model = (T)target;
+            return target.GetType() == typeof(T)
+                       ? this._modelActions.Select(t => new Tuple<Func<bool>, Action>(() => t.Item1(model), t.Item2))
+                             .ToList()
+                       : new List<Tuple<Func<bool>, Action>>();
+        }
+
+        /// <summary>
+        /// The select list for drop down.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList"/>.
+        /// </returns>
+        IList<SelectListItem> IFluentAnnotation.SelectListForDropDown(object target, string propName)
+        {
+            if (this._modelMetadata.ContainsKey(propName))
+            {
+                if (this._modelMetadata[propName].SelectListForDropDown != null)
+                {
+                    return this._modelMetadata[propName].SelectListForDropDown;
+                }
+
+                if (this._modelMetadata[propName].SelectListForDropDownFromModel != null && target != null)
+                {
+                    var model = target as T;
+                    if (model != null)
+                    {
+                        return this._modelMetadata[propName].SelectListForDropDownFromModel(model);
+                    }
+                }
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// The get info.
-        /// </summary>
-        /// <param name="propSelector">
-        /// The prop selector.
-        /// </param>
-        /// <typeparam name="TProp">
-        /// Property type
-        /// </typeparam>
-        /// <returns>
-        /// The <see cref="MemberMetadata"/>.
-        /// </returns>
-        private static MemberMetadata GetInfo<TProp>(Expression<Func<T, TProp>> propSelector)
-        {
-            var body = propSelector.Body as MemberExpression;
-            return body != null ? new MemberMetadata(body.Member) : null;
-        }
 
         /// <summary>
         /// The display name from camel case.

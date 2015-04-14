@@ -10,6 +10,8 @@
 namespace WebApplication1.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
 
     using WebApplication1.Models;
@@ -30,6 +32,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+
             var model = new TestModel
                             {
                                 ConfirmPassword = "Confirm 12345", 
@@ -40,9 +43,23 @@ namespace WebApplication1.Controllers
                                 NulableBoolean = true, 
                                 SelectedIds = 5, 
                                 Phone = "029917064", 
-                                ApplyAnnotations = true, 
+                                ApplyAnnotations = true,
+                                Ids = GetIdsList()
                             };
             return this.View(model);
+        }
+
+        private IList<SelectListItem> GetIdsList()
+        {
+            var selectItems = new List<SelectListItem>();
+            for (int i = 0; i < 5; i++)
+            {
+                selectItems.Add(new SelectListItem { Text = "value " + i, Value = i.ToString() });
+            }
+
+            selectItems.FirstOrDefault(i => i.Value.Equals("2", StringComparison.OrdinalIgnoreCase)).Selected = true;
+
+            return selectItems;
         }
 
         /// <summary>

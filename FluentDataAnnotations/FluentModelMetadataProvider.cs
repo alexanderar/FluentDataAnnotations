@@ -120,6 +120,31 @@ namespace FluentDataAnnotations
         }
 
         /// <summary>
+        /// The get model.
+        /// </summary>
+        /// <param name="modelAccessor">
+        /// The model accessor.
+        /// </param>
+        /// <returns>
+        /// The <see cref="object"/>.
+        /// </returns>
+        private object GetModel(Func<object> modelAccessor)
+        {
+            if (modelAccessor != null)
+            {
+                var target = modelAccessor.Target;
+                var field = target.GetType().GetField("container");
+                if (field != null)
+                {
+                    var model = field.GetValue(target);
+                    return model;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// The get metadata for property.
         /// </summary>
         /// <param name="modelAccessor">
@@ -144,11 +169,6 @@ namespace FluentDataAnnotations
                 containerType.FullName, 
                 containerType.Assembly.FullName);
 
-            //if (modelAccessor != null)
-            //{
-            //    var target = modelAccessor.Target;
-            //}
-
             if (metadataContainer != null)
             {
                 this.SetDescription(metadata, metadataContainer, propertyDescriptor.Name);
@@ -156,7 +176,8 @@ namespace FluentDataAnnotations
                 this.SetIsReadOnly(metadata, metadataContainer, propertyDescriptor.Name);
                 this.SetShowForDisplay(metadata, metadataContainer, propertyDescriptor.Name);
                 this.SetShowForEdit(metadata, metadataContainer, propertyDescriptor.Name);
-                this.SetMetadataForDropDown(metadata, metadataContainer, propertyDescriptor.Name);
+                var model = this.GetModel(modelAccessor);
+                this.SetMetadataForDropDown(model, metadata, metadataContainer, propertyDescriptor.Name);
             }
 
             return metadata;
@@ -433,9 +454,9 @@ namespace FluentDataAnnotations
         /// <param name="propertyName">
         /// The property name.
         /// </param>
-        private void SetMetadataForDropDown(ModelMetadata metadata, IFluentAnnotation metadataContainer, string propertyName)
+        private void SetMetadataForDropDown(object model, ModelMetadata metadata, IFluentAnnotation metadataContainer, string propertyName)
         {
-            var selectList = metadataContainer.SelectListForDropDown(propertyName);
+            var selectList = metadataContainer.SelectListForDropDown(model, propertyName);
             if (selectList != null)
             {
                 metadata.TemplateHint = Utilities.DropDown;

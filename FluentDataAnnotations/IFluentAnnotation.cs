@@ -138,7 +138,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="IList{T}"/>.
         /// </returns>
-        IList<SelectListItem> SelectListForDropDown(string propName);
+        IList<SelectListItem> SelectListForDropDown(object target, string propName);
 
         /// <summary>
         /// The value transform.
