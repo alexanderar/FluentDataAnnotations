@@ -136,7 +136,7 @@ namespace FluentDataAnnotations
         /// </returns>
         public MemberMetadata<T> For<TProp>(Expression<Func<T, TProp>> propSelector)
         {
-            MemberMetadata<T> member = Utilities.GetInfo(propSelector);
+            MemberMetadata<T> member = this.GetInfo(propSelector);
             if (member == null)
             {
                 throw new ArgumentException("propSelector");
@@ -148,6 +148,25 @@ namespace FluentDataAnnotations
             }
 
             return this._modelMetadata[member.Member.Name];
+        }
+
+                /// <summary>
+        /// The get info.
+        /// </summary>
+        /// <param name="propSelector">
+        /// The prop selector.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <typeparam name="TProp">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MemberMetadata{T}"/>.
+        /// </returns>
+        private MemberMetadata<T> GetInfo<TProp>(Expression<Func<T, TProp>> propSelector)
+        {
+            var body = propSelector.Body as MemberExpression;
+            return body != null ? new MemberMetadata<T>(body.Member) : null;
         }
 
         /// <summary>
