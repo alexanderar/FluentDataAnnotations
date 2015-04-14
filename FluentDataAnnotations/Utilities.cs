@@ -35,6 +35,8 @@ namespace FluentDataAnnotations
 
         public const string SelectListKey = "FluentDataAnnotations.SelectListKey";
 
+        public const string OptionLabelForDropDownKey = "FluentDataAnnotations.OptionLabelForDropDownKey";
+
         public const string DropDown = "FluentDataAnnotations.DropDown";
 
         #endregion

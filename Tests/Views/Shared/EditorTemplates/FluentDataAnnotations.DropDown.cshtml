@@ -1,4 +1,5 @@
-﻿@using System.Web.Mvc.Html
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
 @using FluentDataAnnotations
 @using FluentDataAnnotations.Helpers.HtmlHelpers
 
@@ -22,12 +23,9 @@
     }
 
     var selectListKey = ViewData.ModelMetadata.PropertyName + Utilities.SelectListKey;
-    @Html.SmartDropDownList("", (IList<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], props)
+    var optionLabelKey = ViewData.ModelMetadata.PropertyName + Utilities.OptionLabelForDropDownKey;
+    var optionLabel = (string)ViewData.ModelMetadata.AdditionalValues[optionLabelKey];
+    @(optionLabel.IsNullOrWhiteSpace() 
+    ? Html.SmartDropDownList("", (IEnumerable<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], props) 
+    : Html.SmartDropDownList("", (IEnumerable<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], optionLabel, props))
 }
-
-
-
-
-
-
-

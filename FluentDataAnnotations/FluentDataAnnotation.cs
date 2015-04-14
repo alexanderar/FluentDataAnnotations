@@ -313,21 +313,27 @@ namespace FluentDataAnnotations
         /// The select list for drop down.
         /// </summary>
         /// <param name="target">
-        /// The target.
+        ///     The target.
         /// </param>
         /// <param name="propName">
-        /// The prop name.
+        ///     The prop name.
         /// </param>
         /// <returns>
         /// The <see cref="IList"/>.
         /// </returns>
-        IList<SelectListItem> IFluentAnnotation.SelectListForDropDown(object target, string propName)
+        DropDownProperties IFluentAnnotation.DropDownProperties(object target, string propName)
         {
             if (this._modelMetadata.ContainsKey(propName))
             {
+                var props = new DropDownProperties
+                                {
+                                    OptionLabel =
+                                        this._modelMetadata[propName].OptionLabelForDropDown
+                                };
                 if (this._modelMetadata[propName].SelectListForDropDown != null)
                 {
-                    return this._modelMetadata[propName].SelectListForDropDown;
+                    props.SelectList = this._modelMetadata[propName].SelectListForDropDown;
+                    return props;
                 }
 
                 if (this._modelMetadata[propName].SelectListForDropDownFromModel != null && target != null)
@@ -335,7 +341,8 @@ namespace FluentDataAnnotations
                     var model = target as T;
                     if (model != null)
                     {
-                        return this._modelMetadata[propName].SelectListForDropDownFromModel(model);
+                        props.SelectList = this._modelMetadata[propName].SelectListForDropDownFromModel(model);
+                        return props;
                     }
                 }
             }

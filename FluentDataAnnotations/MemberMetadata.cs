@@ -16,11 +16,24 @@ namespace FluentDataAnnotations
     using System.Web.Mvc;
 
     /// <summary>
-    ///     The fluent member meta-data.
+    /// The fluent member meta-data.
     /// </summary>
-    public class MemberMetadata<T> where T : class 
+    /// <typeparam name="T">
+    /// </typeparam>
+    public class MemberMetadata<T>
+        where T : class
     {
         #region Fields
+
+        /// <summary>
+        ///     The _is drop down.
+        /// </summary>
+        protected internal bool _isDropDown;
+
+        /// <summary>
+        ///     The _select list drop down func.
+        /// </summary>
+        protected internal Func<IList<SelectListItem>> _selectListDropDownFunc;
 
         /// <summary>
         ///     The _custom data type.
@@ -93,11 +106,6 @@ namespace FluentDataAnnotations
         private bool _isDisplayNameSet;
 
         /// <summary>
-        ///     The _is drop down.
-        /// </summary>
-        protected internal bool _isDropDown;
-
-        /// <summary>
         ///     The is read only.
         /// </summary>
         private ReadOnlyFormat _isReadOnly;
@@ -108,9 +116,9 @@ namespace FluentDataAnnotations
         private IList<SelectListItem> _selectListDropDown;
 
         /// <summary>
-        ///     The _select list drop down func.
+        ///     The _select list drop down from model func.
         /// </summary>
-        protected internal Func<IList<SelectListItem>> _selectListDropDownFunc;
+        private Func<T, IEnumerable<SelectListItem>> _selectListDropDownFromModelFunc;
 
         /// <summary>
         ///     The is visible.
@@ -137,7 +145,8 @@ namespace FluentDataAnnotations
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MemberMetadata"/> class.
+        /// Initializes a new instance of the <see cref="MemberMetadata{T}"/> class.
+        ///     Initializes a new instance of the <see cref="MemberMetadata"/> class.
         /// </summary>
         /// <param name="member">
         /// The member.
@@ -170,30 +179,6 @@ namespace FluentDataAnnotations
 
                 return null;
             }
-        }
-
-        private Func<T, IList<SelectListItem>> _selectListDropDownFromModelFunc;
-
-        internal Func<T, IList<SelectListItem>> SelectListForDropDownFromModel
-        {
-            get
-            {
-                if (!this._isDropDown || (this._selectListDropDownFromModelFunc == null))
-                {
-                    return null;
-                }
-
-
-                return this._selectListDropDownFromModelFunc;
-            }
-        }
-
-        public MemberMetadata<T> SetDropDown(Expression<Func<T, IList<SelectListItem>>> property)
-        {
-            var func = property.Compile();
-            this._selectListDropDownFromModelFunc = func;
-            this._isDropDown = true;
-            return this;
         }
 
         /// <summary>
@@ -287,6 +272,11 @@ namespace FluentDataAnnotations
         internal MemberInfo Member { get; private set; }
 
         /// <summary>
+        /// Gets the option label for drop down.
+        /// </summary>
+        internal string OptionLabelForDropDown { get; private set; }
+
+        /// <summary>
         ///     Gets the select list for drop down.
         /// </summary>
         internal IList<SelectListItem> SelectListForDropDown
@@ -304,6 +294,22 @@ namespace FluentDataAnnotations
                 }
 
                 return this._selectListDropDown;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the select list for drop down from model.
+        /// </summary>
+        internal Func<T, IEnumerable<SelectListItem>> SelectListForDropDownFromModel
+        {
+            get
+            {
+                if (!this._isDropDown || (this._selectListDropDownFromModelFunc == null))
+                {
+                    return null;
+                }
+
+                return this._selectListDropDownFromModelFunc;
             }
         }
 
@@ -562,15 +568,44 @@ namespace FluentDataAnnotations
         /// <summary>
         /// The set drop down.
         /// </summary>
-        /// <param name="selectListFunc">
-        /// The select list func.
+        /// <param name="property">
+        /// The property.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
         /// </param>
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc)
+        public MemberMetadata<T> SetDropDown<Tselect>(Expression<Func<T, Tselect>> property, string optionLabel) where Tselect : IEnumerable<SelectListItem>
+        {
+            if (property != null)
+            {
+                var expr = Expression.Lambda<Func<T, IEnumerable<SelectListItem>>>(property.Body, property.Parameters);
+                var func = expr.Compile();
+                this._selectListDropDownFromModelFunc = func;
+                this.OptionLabelForDropDown = optionLabel;
+                this._isDropDown = true;
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// The set drop down.
+        /// </summary>
+        /// <param name="selectListFunc">
+        /// The select list func.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MemberMetadata"/>.
+        /// </returns>
+        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc, string optionLabel)
         {
             this._selectListDropDownFunc = selectListFunc;
+            this.OptionLabelForDropDown = optionLabel;
             this._isDropDown = true;
             return this;
         }
@@ -581,12 +616,16 @@ namespace FluentDataAnnotations
         /// <param name="selectList">
         /// The select list.
         /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList)
+        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList, string optionLabel)
         {
             this._selectListDropDown = selectList;
+            this.OptionLabelForDropDown = optionLabel;
             this._isDropDown = true;
             return this;
         }

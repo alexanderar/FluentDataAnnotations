@@ -456,11 +456,12 @@ namespace FluentDataAnnotations
         /// </param>
         private void SetMetadataForDropDown(object model, ModelMetadata metadata, IFluentAnnotation metadataContainer, string propertyName)
         {
-            var selectList = metadataContainer.SelectListForDropDown(model, propertyName);
-            if (selectList != null)
+            var properties = metadataContainer.DropDownProperties(model, propertyName);
+            if (properties != null)
             {
                 metadata.TemplateHint = Utilities.DropDown;
-                metadata.AdditionalValues[propertyName + Utilities.SelectListKey] = selectList;
+                metadata.AdditionalValues[propertyName + Utilities.SelectListKey] = properties.SelectList;
+                metadata.AdditionalValues[propertyName + Utilities.OptionLabelForDropDownKey] = properties.OptionLabel;
             }           
         }
 

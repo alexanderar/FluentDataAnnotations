@@ -188,7 +188,10 @@
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\FluentDataAnnotations.DropDown.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FluentDataAnnotations.DropDown.cshtml">
+      <SubType>
+      </SubType>
+    </Content>
     <Content Include="Views\Shared\EditorTemplates\HiddenInput.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\HtmlInput.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />

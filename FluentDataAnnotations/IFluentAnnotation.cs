@@ -129,16 +129,8 @@ namespace FluentDataAnnotations
         /// </returns>
         string UIHint(string propName);
 
-        /// <summary>
-        /// The select list for drop down.
-        /// </summary>
-        /// <param name="propName">
-        /// The prop name.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IList{T}"/>.
-        /// </returns>
-        IList<SelectListItem> SelectListForDropDown(object target, string propName);
+
+        DropDownProperties DropDownProperties(object target, string propName);
 
         /// <summary>
         /// The value transform.
