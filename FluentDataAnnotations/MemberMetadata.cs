@@ -574,10 +574,12 @@ namespace FluentDataAnnotations
         /// <param name="optionLabel">
         /// The option label.
         /// </param>
+        /// <typeparam name="TSelect">
+        /// </typeparam>
         /// <returns>
-        /// The <see cref="MemberMetadata"/>.
+        /// The <see cref="MemberMetadata{T}"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown<Tselect>(Expression<Func<T, Tselect>> property, string optionLabel) where Tselect : IEnumerable<SelectListItem>
+        public MemberMetadata<T> SetDropDown<TSelect>(Expression<Func<T, TSelect>> property, string optionLabel = null) where TSelect : IEnumerable<SelectListItem>
         {
             if (property != null)
             {
@@ -600,9 +602,9 @@ namespace FluentDataAnnotations
         /// The option label.
         /// </param>
         /// <returns>
-        /// The <see cref="MemberMetadata"/>.
+        /// The <see cref="MemberMetadata{T}"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc, string optionLabel)
+        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc, string optionLabel = null)
         {
             this._selectListDropDownFunc = selectListFunc;
             this.OptionLabelForDropDown = optionLabel;
@@ -622,7 +624,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList, string optionLabel)
+        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList, string optionLabel = null)
         {
             this._selectListDropDown = selectList;
             this.OptionLabelForDropDown = optionLabel;
