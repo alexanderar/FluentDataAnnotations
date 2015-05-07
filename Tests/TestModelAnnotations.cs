@@ -12,8 +12,10 @@ namespace WebApplication1
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Policy;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Web;
     using System.Web.Mvc;
 
     using FluentDataAnnotations;
@@ -32,6 +34,8 @@ namespace WebApplication1
         /// </summary>
         public TestModelAnnotations()
         {
+            string actionUrl = "http://localhost:1665/Home/Get2IdsList";
+
             this.When(
                 p => p.ApplyAnnotations, 
                 () =>
@@ -77,12 +81,10 @@ namespace WebApplication1
 
                         this.For(p => p.SelectedIds)
                             .SetDisplayName("Dropdown")
-                            .SetDropDown(p => p.Ids, "Please select Id")
-                            .SetReadOnly(
-                                () =>
-                                Thread.CurrentPrincipal.Identity.Name.Equals(
-                                    "alex.art84@gmail.com", 
-                                    StringComparison.OrdinalIgnoreCase));
+                            .SetDropDown(p => p.Ids, "Please select Id");
+                        this.For(p => p.SelectedIds2)
+                            .SetDisplayName("CascadeDropdown")
+                            .SetCascadingDropDown(m => m.SelectedIds, actionUrl, "id", "Please select cascade", true);
                     });
 
         }

@@ -129,8 +129,33 @@ namespace FluentDataAnnotations
         /// </returns>
         string UIHint(string propName);
 
-
+        /// <summary>
+        /// The drop down properties.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="DropDownProperties"/>.
+        /// </returns>
         DropDownProperties DropDownProperties(object target, string propName);
+
+        /// <summary>
+        /// The cascading drop down properties.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="CascadeDropDownProperties"/>.
+        /// </returns>
+        CascadeDropDownProperties CascadingDropDownProperties(object target, string propName);
 
         /// <summary>
         /// The value transform.

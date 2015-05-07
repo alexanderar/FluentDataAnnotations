@@ -10,6 +10,7 @@ namespace FluentDataAnnotations
 {
     using System;
     using System.Linq.Expressions;
+    using System.Reflection;
 
     /// <summary>
     ///     The utilities.
@@ -19,29 +20,59 @@ namespace FluentDataAnnotations
         #region Constants
 
         /// <summary>
-        /// The display as disabled input key.
+        /// The cascade drop down properties key.
+        /// </summary>
+        public const string CascadeDropDownPropertiesKey = "FluentDataAnnotations.CascadeDropDownProperties";
+
+        /// <summary>
+        ///     The display as disabled input key.
         /// </summary>
         public const string DisplayAsDisabledInputKey = "FluentDataAnnotations.DisplayAsDisabledInput";
 
         /// <summary>
-        /// The show label for display key.
+        /// The drop down.
+        /// </summary>
+        public const string DropDown = "FluentDataAnnotations.DropDown";
+
+        /// <summary>
+        /// The drop down properties key.
+        /// </summary>
+        public const string DropDownPropertiesKey = "FluentDataAnnotations.DropDownProperties";
+
+        /// <summary>
+        ///     The show label for display key.
         /// </summary>
         public const string ShowLabelForDisplayKey = "FluentDataAnnotations.ShowLabelForDisplay";
 
         /// <summary>
-        /// The show label for edit key.
+        ///     The show label for edit key.
         /// </summary>
         public const string ShowLabelForEditKey = "FluentDataAnnotations.ShowLabelForEdit";
-
-        public const string SelectListKey = "FluentDataAnnotations.SelectListKey";
-
-        public const string OptionLabelForDropDownKey = "FluentDataAnnotations.OptionLabelForDropDownKey";
-
-        public const string DropDown = "FluentDataAnnotations.DropDown";
 
         #endregion
 
         #region Public Methods and Operators
+
+        /// <summary>
+        /// The get member info.
+        /// </summary>
+        /// <param name="propSelector">
+        /// The prop selector.
+        /// </param>
+        /// <typeparam name="TModel">
+        /// Type of model
+        /// </typeparam>
+        /// <typeparam name="TProp">
+        /// Type of property in model
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MemberInfo"/>.
+        /// </returns>
+        public static MemberInfo GetMemberInfo<TModel, TProp>(Expression<Func<TModel, TProp>> propSelector)
+        {
+            var body = propSelector.Body as MemberExpression;
+            return body != null ? body.Member : null;
+        }
 
         /// <summary>
         /// The is null or white space.

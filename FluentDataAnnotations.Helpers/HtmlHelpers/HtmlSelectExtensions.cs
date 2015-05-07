@@ -12,16 +12,378 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
+    using System.Web.Routing;
 
     /// <summary>
-    ///     The html select extensions.
+    ///     The HTML select extensions.
     /// </summary>
     public static class HtmlSelectExtensions
     {
         // DropDownList
+        #region Constants
+
+        /// <summary>
+        ///     The pure JavaScript  format.
+        /// </summary>
+        /// <remarks>
+        ///     0 - triggerMemberInfo.Name
+        ///     1 - URL
+        ///     2 - actionParam
+        ///     3 - optionLabel
+        ///     4 - dropdownElementId
+        ///     5 - if element should be disabled when parent not selected, will contain setAttribute('disabled','disabled')
+        ///     command
+        ///     6 - if element was initially disabled, will contain removeAttribute('disabled') command
+        /// </remarks>
+        private const string PureJSScriptFormat = @"<script>       
+    function initCascadeDropDownFor{4}() {{
+        var triggerElement = document.getElementById('{0}');
+        triggerElement.addEventListener('change', function(e) {{
+            var value = triggerElement.value;
+            var items = '<option value="""">{3}</option>';
+            var targetElement = document.getElementById('{4}');
+            if (value === '' || value == null) {{
+                targetElement.innerHTML = items;
+                targetElement.value = '';
+                {5}
+                var event = document.createEvent('HTMLEvents');
+                event.initEvent('change', true, false);
+                targetElement.dispatchEvent(event);
+                return;
+            }}
+            var url = '{1}?{2}=' + value;
+            var request = new XMLHttpRequest();
+            request.open('GET', url, true);
+
+            request.onload = function () {{
+                if (request.status >= 200 && request.status < 400) {{
+                    // Success!
+                    var data = JSON.parse(request.responseText);
+                    if (data) {{
+                        data.forEach(function(item, i) {{
+                            items += '<option value=""' + item.Value + '"">' + item.Text + '</option>';
+                        }});
+                        targetElement.innerHTML = items;
+                        {6}
+                    }}
+                }} else {{
+                    console.log(request.statusText);
+                }}
+            }};
+
+            request.onerror = function (error) {{
+                console.log(error);
+            }};
+
+            request.send();
+        }});
+    }};
+
+    if (document.readyState != 'loading') {{
+        initCascadeDropDownFor{4}();
+    }} else {{
+        document.addEventListener('DOMContentLoaded', initCascadeDropDownFor{4});
+    }}
+</script>";
+
+        #endregion
+
         #region Public Methods and Operators
+
+        /// <summary>
+        /// The cascading drop down list for.
+        /// </summary>
+        /// <param name="htmlHelper">
+        /// The html helper.
+        /// </param>
+        /// <param name="expression">
+        /// The expression.
+        /// </param>
+        /// <param name="triggeredByProperty">
+        /// The triggered by property.
+        /// </param>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action param.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <param name="htmlAttributes">
+        /// The html attributes.
+        /// </param>
+        /// <typeparam name="TModel">
+        /// </typeparam>
+        /// <typeparam name="TProperty">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        public static MvcHtmlString CascadingDropDownListFor<TModel, TProperty>(
+            this HtmlHelper<TModel> htmlHelper, 
+            Expression<Func<TModel, TProperty>> expression, 
+            Expression<Func<TModel, TProperty>> triggeredByProperty, 
+            string url, 
+            string actionParam, 
+            string optionLabel = "", 
+            bool disabledWhenParentNotSelected = false, 
+            object htmlAttributes = null)
+        {
+            MemberInfo triggerMemberInfo = Utilities.GetMemberInfo(triggeredByProperty);
+            if (triggerMemberInfo == null)
+            {
+                throw new ArgumentException("triggeredByProperty argument is invalid");
+            }
+
+            return CascadingDropDownListFor(
+                htmlHelper, 
+                expression, 
+                triggerMemberInfo.Name, 
+                url, 
+                actionParam, 
+                optionLabel, 
+                disabledWhenParentNotSelected, 
+                htmlAttributes);
+        }
+
+        /// <summary>
+        /// The cascading drop down list for.
+        /// </summary>
+        /// <param name="htmlHelper">
+        /// The html helper.
+        /// </param>
+        /// <param name="name">
+        /// The property.
+        /// </param>
+        /// <param name="triggeredByProperty">
+        /// The triggered by property.
+        /// </param>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action param.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <param name="htmlAttributes">
+        /// The html attributes.
+        /// </param>
+        /// <typeparam name="TModel">
+        /// </typeparam>
+        /// <typeparam name="TProperty">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// </exception>
+        public static MvcHtmlString CascadingDropDownList<TModel, TProperty>(
+            this HtmlHelper htmlHelper,
+            string name,
+            Expression<Func<TModel, TProperty>> triggeredByProperty,
+            string url,
+            string actionParam,
+            string optionLabel = "",
+            bool disabledWhenParentNotSelected = false,
+            object htmlAttributes = null)
+        {
+            MemberInfo triggerMemberInfo = Utilities.GetMemberInfo(triggeredByProperty);
+            if (triggerMemberInfo == null)
+            {
+                throw new ArgumentException("triggeredByProperty argument is invalid");
+            }
+
+            return CascadingDropDownList(
+                htmlHelper,
+                name,
+                triggerMemberInfo.Name,
+                url,
+                actionParam,
+                optionLabel,
+                disabledWhenParentNotSelected,
+                htmlAttributes);
+        }
+
+        /// <summary>
+        /// The cascading drop down list for.
+        /// </summary>
+        /// <param name="htmlHelper">
+        /// The html helper.
+        /// </param>
+        /// <param name="name">
+        /// The property.
+        /// </param>
+        /// <param name="triggeredByProperty">
+        /// The triggered by property.
+        /// </param>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action param.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <param name="htmlAttributes">
+        /// The html attributes.
+        /// </param>
+        /// <typeparam name="TModel">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
+        public static MvcHtmlString CascadingDropDownList(
+            this HtmlHelper htmlHelper,
+            string name,
+            string triggeredByProperty,
+            string url,
+            string actionParam,
+            string optionLabel = "",
+            bool disabledWhenParentNotSelected = false,
+            object htmlAttributes = null)
+        {
+            RouteValueDictionary dictionary = null;
+            if (htmlAttributes != null)
+            {
+                dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            }
+
+            if (disabledWhenParentNotSelected)
+            {
+                if (dictionary == null)
+                {
+                    dictionary = new RouteValueDictionary();
+                }
+
+                dictionary.Add("disabled", "disabled");
+            }
+
+            var defaultDropDownHtml = htmlHelper.SmartDropDownList(
+                name,
+                new List<SelectListItem>(),
+                optionLabel,
+                dictionary);
+
+            string script;
+
+            if (disabledWhenParentNotSelected)
+            {
+                script = string.Format(
+                    PureJSScriptFormat,
+                    triggeredByProperty,
+                    url,
+                    actionParam,
+                    optionLabel,
+                    name,
+                    "targetElement.setAttribute('disabled','disabled');",
+                    "targetElement.removeAttribute('disabled');");
+            }
+            else
+            {
+                script = string.Format(
+                    PureJSScriptFormat,
+                    triggeredByProperty,
+                    url,
+                    actionParam,
+                    optionLabel,
+                    name,
+                    string.Empty,
+                    string.Empty);
+            }
+
+            var cascadingDropDownString = defaultDropDownHtml + Environment.NewLine + script;
+
+            return new MvcHtmlString(cascadingDropDownString);
+        }
+
+        /// <summary>
+        /// The cascading drop down list for.
+        /// </summary>
+        /// <param name="htmlHelper">
+        /// The HTML helper.
+        /// </param>
+        /// <param name="expression">
+        /// The expression.
+        /// </param>
+        /// <param name="triggeredByPropertyWithId">
+        /// The triggered By Property With Id.
+        /// </param>
+        /// <param name="url">
+        /// The URL.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action parameter.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <param name="htmlAttributes">
+        /// The HTML attributes.
+        /// </param>
+        /// <typeparam name="TModel">
+        /// Type of model
+        /// </typeparam>
+        /// <typeparam name="TProperty">
+        /// Type of property in model
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown in case that one of the arguments is invalid
+        /// </exception>
+        public static MvcHtmlString CascadingDropDownListFor<TModel, TProperty>(
+            this HtmlHelper<TModel> htmlHelper, 
+            Expression<Func<TModel, TProperty>> expression, 
+            string triggeredByPropertyWithId, 
+            string url,
+            string actionParam, 
+            string optionLabel = "", 
+            bool disabledWhenParentNotSelected = false, 
+            object htmlAttributes = null)
+        {
+
+            MemberInfo dropDownElement = Utilities.GetMemberInfo(expression);
+
+            if (dropDownElement == null)
+            {
+                throw new ArgumentException("expression argument is invalid");
+            }
+
+            var dropDownElementId = dropDownElement.Name;
+
+            return CascadingDropDownList(
+               htmlHelper,
+               dropDownElementId,
+               triggeredByPropertyWithId,
+               url,
+               actionParam,
+               optionLabel,
+               disabledWhenParentNotSelected,
+               htmlAttributes);            
+        }
 
         /// <summary>
         /// The smart drop down list.
@@ -74,21 +436,20 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
         /// The smart drop down list.
         /// </summary>
         /// <param name="htmlHelper">
-        /// The html helper.
+        ///     The html helper.
         /// </param>
         /// <param name="name">
-        /// The name.
+        ///     The name.
         /// </param>
         /// <param name="selectList">
-        /// The select list.
+        ///     The select list.
         /// </param>
+        /// <param name="optionLabel"></param>
+        /// <param name="htmlAttributes"></param>
         /// <returns>
         /// The <see cref="System.Web.Mvc.MvcHtmlString"/>.
         /// </returns>
-        public static MvcHtmlString SmartDropDownList(
-            this HtmlHelper htmlHelper, 
-            string name, 
-            IEnumerable<SelectListItem> selectList)
+        public static MvcHtmlString SmartDropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList)
         {
             return SmartDropDownList(htmlHelper, name, selectList, null /* optionLabel */, null /* htmlAttributes */);
         }
@@ -144,8 +505,8 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 name, 
                 selectList, 
-                (string)null /* optionLabel */, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                null /* optionLabel */, 
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -176,8 +537,8 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 name, 
                 selectList, 
-                (string)null /* optionLabel */, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                null /* optionLabel */, 
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -321,7 +682,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 name, 
                 selectList, 
                 optionLabel, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -357,7 +718,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 name, 
                 selectList, 
                 optionLabel, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -527,8 +888,8 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 expression, 
                 selectList, 
-                (string)null /* optionLabel */, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                null /* optionLabel */, 
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -563,8 +924,8 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 expression, 
                 selectList, 
-                (string)null /* optionLabel */, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                null /* optionLabel */, 
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -728,7 +1089,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 expression, 
                 selectList, 
                 optionLabel, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -768,7 +1129,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 expression, 
                 selectList, 
                 optionLabel, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -955,7 +1316,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 name, 
                 selectList, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -986,7 +1347,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 name, 
                 selectList, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -1134,7 +1495,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 expression, 
                 selectList, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -1169,7 +1530,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 htmlHelper, 
                 expression, 
                 selectList, 
-                (IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+                HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         /// <summary>
@@ -1250,6 +1611,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
 
         #region Methods
 
+
         /// <summary>
         /// The get readonly value.
         /// </summary>
@@ -1283,7 +1645,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                     IList<SelectListItem> selectListItems = selected as IList<SelectListItem> ?? selected.ToList();
 
                     return selectListItems.Any()
-                               ? MvcHtmlString.Create(string.Join((string)", ", (IEnumerable<string>)selectListItems.Select(s => s.Text)))
+                               ? MvcHtmlString.Create(string.Join(", ", selectListItems.Select(s => s.Text)))
                                : MvcHtmlString.Empty;
                 }
 

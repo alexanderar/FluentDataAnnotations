@@ -62,6 +62,18 @@ namespace WebApplication1.Controllers
             return selectItems;
         }
 
+        public ActionResult Get2IdsList(int id)
+        {
+            var selectItems = new List<SelectListItem>();
+            for (int i = 0; i < 5; i++)
+            {
+                var val = id * 10 + i;
+                selectItems.Add(new SelectListItem { Text = "value " + val, Value = val.ToString() });
+            }
+
+            return Json(selectItems, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// The index.
         /// </summary>

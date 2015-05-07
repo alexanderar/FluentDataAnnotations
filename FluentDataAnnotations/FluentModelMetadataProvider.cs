@@ -178,6 +178,7 @@ namespace FluentDataAnnotations
                 this.SetShowForEdit(metadata, metadataContainer, propertyDescriptor.Name);
                 var model = this.GetModel(modelAccessor);
                 this.SetMetadataForDropDown(model, metadata, metadataContainer, propertyDescriptor.Name);
+                this.SetMetadataForCascadeDropDown(model, metadata, metadataContainer, propertyDescriptor.Name);
             }
 
             return metadata;
@@ -460,9 +461,33 @@ namespace FluentDataAnnotations
             if (properties != null)
             {
                 metadata.TemplateHint = Utilities.DropDown;
-                metadata.AdditionalValues[propertyName + Utilities.SelectListKey] = properties.SelectList;
-                metadata.AdditionalValues[propertyName + Utilities.OptionLabelForDropDownKey] = properties.OptionLabel;
+                metadata.AdditionalValues[propertyName + Utilities.DropDownPropertiesKey] = properties;
             }           
+        }
+
+        /// <summary>
+        /// The set metadata for cascade drop down.
+        /// </summary>
+        /// <param name="model">
+        /// The model.
+        /// </param>
+        /// <param name="metadata">
+        /// The metadata.
+        /// </param>
+        /// <param name="metadataContainer">
+        /// The metadata container.
+        /// </param>
+        /// <param name="propertyName">
+        /// The property name.
+        /// </param>
+        private void SetMetadataForCascadeDropDown(object model, ModelMetadata metadata, IFluentAnnotation metadataContainer, string propertyName)
+        {
+            var properties = metadataContainer.CascadingDropDownProperties(model, propertyName);
+            if (properties != null)
+            {
+                metadata.TemplateHint = Utilities.DropDown;
+                metadata.AdditionalValues[propertyName + Utilities.CascadeDropDownPropertiesKey] = properties;               
+            }
         }
 
         /// <summary>

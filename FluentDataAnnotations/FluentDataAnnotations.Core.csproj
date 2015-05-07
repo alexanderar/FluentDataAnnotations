@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CascadeDropDownProperties.cs" />
     <Compile Include="DropDownProperties.cs" />
     <Compile Include="FluentModelMetadataProvider.cs" />
     <Compile Include="DisplayFormat.cs" />

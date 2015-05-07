@@ -1,8 +1,6 @@
-﻿@using System.Web.Mvc
-@using System.Web.Mvc.Html
+﻿
 @using FluentDataAnnotations
 @using FluentDataAnnotations.Helpers.HtmlHelpers
-
 @if (!ViewData.ModelMetadata.ShowForEdit)
 {
     return;
@@ -11,21 +9,38 @@
 @if (ViewData.ModelMetadata.IsReadOnly && !ViewData.ModelMetadata.AdditionalValues.ContainsKey(Utilities.DisplayAsDisabledInputKey))
 {
     @Html.Encode(ViewData.TemplateInfo.FormattedModelValue)
-    @Html.Hidden("", ViewData.TemplateInfo.FormattedModelValue)
+    @Html.Hidden(string.Empty, ViewData.TemplateInfo.FormattedModelValue)
     return;
 }
 @{
-    var props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+    RouteValueDictionary props = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     if (ViewData.ModelMetadata.IsReadOnly)
     {
         props["disabled"] = "disabled";
-        @Html.Hidden("", ViewData.TemplateInfo.FormattedModelValue)
+        @Html.Hidden(string.Empty, ViewData.TemplateInfo.FormattedModelValue)
     }
 
-    var selectListKey = ViewData.ModelMetadata.PropertyName + Utilities.SelectListKey;
-    var optionLabelKey = ViewData.ModelMetadata.PropertyName + Utilities.OptionLabelForDropDownKey;
-    var optionLabel = (string)ViewData.ModelMetadata.AdditionalValues[optionLabelKey];
-    @(optionLabel.IsNullOrWhiteSpace() 
-    ? Html.SmartDropDownList("", (IEnumerable<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], props) 
-    : Html.SmartDropDownList("", (IEnumerable<SelectListItem>)ViewData.ModelMetadata.AdditionalValues[selectListKey], optionLabel, props))
+    string ddKey = ViewData.ModelMetadata.PropertyName + Utilities.DropDownPropertiesKey;
+    string cascadeKey = ViewData.ModelMetadata.PropertyName + Utilities.DropDownPropertiesKey;
+
+    if (ViewData.ModelMetadata.AdditionalValues.ContainsKey(ddKey))
+    {
+        var ddProps = ViewData.ModelMetadata.AdditionalValues[ddKey] as DropDownProperties;
+
+        if (ddProps != null)
+        {
+            @Html.SmartDropDownList(string.Empty, ddProps.SelectList, ddProps.OptionLabel ?? string.Empty, props);
+            return;
+        }
+    }
+
+    if (ViewData.ModelMetadata.AdditionalValues.ContainsKey(cascadeKey))
+    {
+        var cddProps = ViewData.ModelMetadata.AdditionalValues[cascadeKey] as CascadeDropDownProperties;
+        if (cddProps != null)
+        {
+            @Html.CascadingDropDownList(string.Empty, cddProps.TriggeredByPropertyId, cddProps.Url, cddProps.ActionParam, cddProps.OptionLabel ?? string.Empty, cddProps.DisabledWhenParentNotSelected, props);
+        }
+    }
+
 }

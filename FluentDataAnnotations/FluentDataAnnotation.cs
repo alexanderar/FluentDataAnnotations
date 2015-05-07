@@ -149,8 +149,8 @@ namespace FluentDataAnnotations
 
             return this._modelMetadata[member.Member.Name];
         }
-
-                /// <summary>
+                
+        /// <summary>
         /// The get info.
         /// </summary>
         /// <param name="propSelector">
@@ -348,6 +348,42 @@ namespace FluentDataAnnotations
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// The cascading drop down properties.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="propName">
+        /// The prop name.
+        /// </param>
+        /// <returns>
+        /// The <see cref="CascadeDropDownProperties"/>.
+        /// </returns>
+        CascadeDropDownProperties IFluentAnnotation.CascadingDropDownProperties(object target, string propName)
+        {
+            if (!this._modelMetadata.ContainsKey(propName))
+            {
+                return null;
+            }
+
+            if (this._modelMetadata[propName].CascadeTriggeredByPropertyId.IsNullOrWhiteSpace() || 
+                this._modelMetadata[propName].CascadeUrl.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+
+            return new CascadeDropDownProperties
+                            {
+                                OptionLabel = this._modelMetadata[propName].CascadeOptionLabel,
+                                ActionParam = this._modelMetadata[propName].CascadeActionParam,
+                                DisabledWhenParentNotSelected = this._modelMetadata[propName].CascadeDisabledWhenParentNotSelected,
+                                TriggeredByPropertyId = this._modelMetadata[propName].CascadeTriggeredByPropertyId,
+                                Url = this._modelMetadata[propName].CascadeUrl
+                            };
+
         }
 
         #endregion

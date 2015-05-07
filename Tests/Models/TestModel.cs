@@ -24,6 +24,8 @@
 
         public int SelectedIds { get; set; }
 
+        public int SelectedIds2 { get; set; }
+
         public IList<SelectListItem> Ids { get; set; }
 
         public string Phone { get; set; }

@@ -81,6 +81,11 @@ namespace FluentDataAnnotations
         private Func<string> _displayNameFunc;
 
         /// <summary>
+        /// The _is cascade drop down.
+        /// </summary>
+        private bool _isCascadeDropDown;
+
+        /// <summary>
         ///     The _is custom data type set.
         /// </summary>
         private bool _isCustomDataTypeSet;
@@ -155,6 +160,35 @@ namespace FluentDataAnnotations
         {
             this.Member = member;
         }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the cascade action param.
+        /// </summary>
+        public string CascadeActionParam { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether cascade disabled when parent not selected.
+        /// </summary>
+        public bool CascadeDisabledWhenParentNotSelected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cascade option label.
+        /// </summary>
+        public string CascadeOptionLabel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cascade triggered by property id.
+        /// </summary>
+        public string CascadeTriggeredByPropertyId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cascade url.
+        /// </summary>
+        public string CascadeUrl { get; set; }
 
         #endregion
 
@@ -272,7 +306,7 @@ namespace FluentDataAnnotations
         internal MemberInfo Member { get; private set; }
 
         /// <summary>
-        /// Gets the option label for drop down.
+        ///     Gets the option label for drop down.
         /// </summary>
         internal string OptionLabelForDropDown { get; private set; }
 
@@ -390,6 +424,56 @@ namespace FluentDataAnnotations
                                           ValueTransformFunc = valueTransformFunc, 
                                           ApplyTransformInEditMode = applyTransformInEditMode
                                       };
+            return this;
+        }
+
+        /// <summary>
+        /// The set cascading drop down.
+        /// </summary>
+        /// <param name="triggeredByProperty">
+        /// The triggered by property.
+        /// </param>
+        /// <param name="url">
+        /// The URL.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action parameter.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <typeparam name="TProp">
+        /// Type of property
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MemberMetadata{T}"/>.
+        /// </returns>
+        public MemberMetadata<T> SetCascadingDropDown<TProp>(
+            Expression<Func<T, TProp>> triggeredByProperty, 
+            string url, 
+            string actionParam, 
+            string optionLabel = "", 
+            bool disabledWhenParentNotSelected = false)
+        {
+            if (triggeredByProperty != null)
+            {
+                MemberInfo triggerMemberInfo = Utilities.GetMemberInfo(triggeredByProperty);
+                if (triggerMemberInfo == null)
+                {
+                    return this;
+                }
+
+                this.CascadeTriggeredByPropertyId = triggerMemberInfo.Name;
+                this.CascadeUrl = url;
+                this.CascadeOptionLabel = optionLabel;
+                this.CascadeActionParam = actionParam;
+                this.CascadeDisabledWhenParentNotSelected = disabledWhenParentNotSelected;
+                this._isCascadeDropDown = true;
+            }
+
             return this;
         }
 
@@ -579,16 +663,19 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata{T}"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown<TSelect>(Expression<Func<T, TSelect>> property, string optionLabel = null) where TSelect : IEnumerable<SelectListItem>
+        public MemberMetadata<T> SetDropDown<TSelect>(Expression<Func<T, TSelect>> property, string optionLabel = null)
+            where TSelect : IEnumerable<SelectListItem>
         {
             if (property != null)
             {
-                var expr = Expression.Lambda<Func<T, IEnumerable<SelectListItem>>>(property.Body, property.Parameters);
-                var func = expr.Compile();
+                Expression<Func<T, IEnumerable<SelectListItem>>> expr =
+                    Expression.Lambda<Func<T, IEnumerable<SelectListItem>>>(property.Body, property.Parameters);
+                Func<T, IEnumerable<SelectListItem>> func = expr.Compile();
                 this._selectListDropDownFromModelFunc = func;
                 this.OptionLabelForDropDown = optionLabel;
                 this._isDropDown = true;
             }
+
             return this;
         }
 
