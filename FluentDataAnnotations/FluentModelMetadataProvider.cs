@@ -482,7 +482,7 @@ namespace FluentDataAnnotations
         /// </param>
         private void SetMetadataForCascadeDropDown(object model, ModelMetadata metadata, IFluentAnnotation metadataContainer, string propertyName)
         {
-            var properties = metadataContainer.CascadingDropDownProperties(model, propertyName);
+             var properties = metadataContainer.CascadingDropDownProperties(model, propertyName);
             if (properties != null)
             {
                 metadata.TemplateHint = Utilities.DropDown;

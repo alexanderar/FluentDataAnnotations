@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Web.UI;
+
 namespace WebApplication1.Controllers
 {
     using System;
@@ -40,8 +42,10 @@ namespace WebApplication1.Controllers
                                 OldPassword = "old 12345", 
                                 HiddenTest = 123, 
                                 Time = DateTime.Now, 
-                                NulableBoolean = true, 
-                                SelectedIds = 5, 
+                                NulableBoolean = true,
+                                //SelectedIds = 5,
+                                //SelectedIds2 = 55,
+                                //SelectedIds3 = 553,
                                 Phone = "029917064", 
                                 ApplyAnnotations = true,
                                 Ids = GetIdsList()
@@ -52,12 +56,10 @@ namespace WebApplication1.Controllers
         private IList<SelectListItem> GetIdsList()
         {
             var selectItems = new List<SelectListItem>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 1; i < 11; i++)
             {
                 selectItems.Add(new SelectListItem { Text = "value " + i, Value = i.ToString() });
             }
-
-            selectItems.FirstOrDefault(i => i.Value.Equals("2", StringComparison.OrdinalIgnoreCase)).Selected = true;
 
             return selectItems;
         }
@@ -65,7 +67,7 @@ namespace WebApplication1.Controllers
         public ActionResult Get2IdsList(int id)
         {
             var selectItems = new List<SelectListItem>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 1; i < 11; i++)
             {
                 var val = id * 10 + i;
                 selectItems.Add(new SelectListItem { Text = "value " + val, Value = val.ToString() });
@@ -84,8 +86,11 @@ namespace WebApplication1.Controllers
         /// The <see cref="ActionResult"/>.
         /// </returns>
         [HttpPost]
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Index(TestModel model)
         {
+            model.Ids = GetIdsList();
+            model.ApplyAnnotations = true;
             return this.View(model);
         }
 

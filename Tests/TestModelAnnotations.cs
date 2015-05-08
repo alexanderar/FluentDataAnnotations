@@ -82,9 +82,14 @@ namespace WebApplication1
                         this.For(p => p.SelectedIds)
                             .SetDisplayName("Dropdown")
                             .SetDropDown(p => p.Ids, "Please select Id");
+
                         this.For(p => p.SelectedIds2)
                             .SetDisplayName("CascadeDropdown")
                             .SetCascadingDropDown(m => m.SelectedIds, actionUrl, "id", "Please select cascade", true);
+
+                        this.For(p => p.SelectedIds3)
+                           .SetDisplayName("CascadeDropdown")
+                           .SetCascadingDropDown(m => m.SelectedIds2, actionUrl, "id", "Please select cascade 2", true);
                     });
 
         }

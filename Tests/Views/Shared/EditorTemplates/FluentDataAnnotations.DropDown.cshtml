@@ -21,7 +21,7 @@
     }
 
     string ddKey = ViewData.ModelMetadata.PropertyName + Utilities.DropDownPropertiesKey;
-    string cascadeKey = ViewData.ModelMetadata.PropertyName + Utilities.DropDownPropertiesKey;
+    string cascadeKey = ViewData.ModelMetadata.PropertyName + Utilities.CascadeDropDownPropertiesKey;
 
     if (ViewData.ModelMetadata.AdditionalValues.ContainsKey(ddKey))
     {
@@ -39,7 +39,7 @@
         var cddProps = ViewData.ModelMetadata.AdditionalValues[cascadeKey] as CascadeDropDownProperties;
         if (cddProps != null)
         {
-            @Html.CascadingDropDownList(string.Empty, cddProps.TriggeredByPropertyId, cddProps.Url, cddProps.ActionParam, cddProps.OptionLabel ?? string.Empty, cddProps.DisabledWhenParentNotSelected, props);
+            @Html.CascadingDropDownList(string.Empty, ViewData.ModelMetadata.PropertyName, cddProps.TriggeredByPropertyId, cddProps.Url, cddProps.ActionParam, cddProps.OptionLabel ?? string.Empty, cddProps.DisabledWhenParentNotSelected, props);
         }
     }
 
