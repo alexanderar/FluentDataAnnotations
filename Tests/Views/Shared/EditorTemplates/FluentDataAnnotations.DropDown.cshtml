@@ -1,4 +1,6 @@
-﻿
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Routing
 @using FluentDataAnnotations
 @using FluentDataAnnotations.Helpers.HtmlHelpers
 @if (!ViewData.ModelMetadata.ShowForEdit)
@@ -29,7 +31,7 @@
 
         if (ddProps != null)
         {
-            @Html.SmartDropDownList(string.Empty, ddProps.SelectList, ddProps.OptionLabel ?? string.Empty, props);
+            @Html.SmartDropDownList(string.Empty, ddProps.SelectList, ddProps.OptionLabel ?? string.Empty, props)
             return;
         }
     }
@@ -39,7 +41,14 @@
         var cddProps = ViewData.ModelMetadata.AdditionalValues[cascadeKey] as CascadeDropDownProperties;
         if (cddProps != null)
         {
-            @Html.CascadingDropDownList(string.Empty, ViewData.ModelMetadata.PropertyName, cddProps.TriggeredByPropertyId, cddProps.Url, cddProps.ActionParam, cddProps.OptionLabel ?? string.Empty, cddProps.DisabledWhenParentNotSelected, props);
+            var propId = this.Html.ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty);
+            string triggeredById = cddProps.TriggeredByPropertyId;
+            if (this.Html.ViewData.TemplateInfo.TemplateDepth > 1)
+            {
+                var index = propId.LastIndexOf(ViewData.ModelMetadata.PropertyName);
+                triggeredById = propId.Remove(index) + cddProps.TriggeredByPropertyId;
+            }
+            @Html.CascadingDropDownList(string.Empty, propId, triggeredById, cddProps.Url, cddProps.ActionParam, cddProps.OptionLabel ?? string.Empty, cddProps.DisabledWhenParentNotSelected, props)
         }
     }
 

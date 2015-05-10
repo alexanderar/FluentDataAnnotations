@@ -185,10 +185,9 @@ namespace FluentDataAnnotations
         /// </summary>
         public string CascadeTriggeredByPropertyId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the cascade url.
-        /// </summary>
-        public string CascadeUrl { get; set; }
+        private string _CascadeUrl;
+
+        private Func<string> _CascadeUrlFunc;       
 
         #endregion
 
@@ -281,6 +280,24 @@ namespace FluentDataAnnotations
                 }
 
                 return this._displayName;
+            }
+        }
+
+        internal string CascadeUrl
+        {
+            get
+            {
+                if (!this._CascadeUrl.IsNullOrWhiteSpace())
+                {
+                    return this._CascadeUrl;
+                }
+
+                if (this._CascadeUrlFunc != null)
+                {
+                    this._CascadeUrl = this._CascadeUrlFunc();
+                }
+
+                return this._CascadeUrl;
             }
         }
 
@@ -467,7 +484,56 @@ namespace FluentDataAnnotations
                 }
 
                 this.CascadeTriggeredByPropertyId = triggerMemberInfo.Name;
-                this.CascadeUrl = url;
+                this._CascadeUrl = url;
+                this.CascadeOptionLabel = optionLabel;
+                this.CascadeActionParam = actionParam;
+                this.CascadeDisabledWhenParentNotSelected = disabledWhenParentNotSelected;
+                this._isCascadeDropDown = true;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// The set cascading drop down.
+        /// </summary>
+        /// <param name="triggeredByProperty">
+        /// The triggered by property.
+        /// </param>
+        /// <param name="urlFunc">
+        /// The URL function.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action parameter.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <typeparam name="TProp">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="MemberMetadata{T}"/>.
+        /// </returns>
+        public MemberMetadata<T> SetCascadingDropDown<TProp>(
+            Expression<Func<T, TProp>> triggeredByProperty,
+            Func<string> urlFunc,
+            string actionParam,
+            string optionLabel = "",
+            bool disabledWhenParentNotSelected = false)
+        {
+            if (triggeredByProperty != null)
+            {
+                MemberInfo triggerMemberInfo = Utilities.GetMemberInfo(triggeredByProperty);
+                if (triggerMemberInfo == null)
+                {
+                    return this;
+                }
+
+                this.CascadeTriggeredByPropertyId = triggerMemberInfo.Name;
+                this._CascadeUrlFunc = urlFunc;
                 this.CascadeOptionLabel = optionLabel;
                 this.CascadeActionParam = actionParam;
                 this.CascadeDisabledWhenParentNotSelected = disabledWhenParentNotSelected;

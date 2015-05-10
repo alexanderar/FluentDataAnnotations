@@ -43,9 +43,22 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
     function initCascadeDropDownFor{4}() {{
         var triggerElement = document.getElementById('{0}');
         var targetElement = document.getElementById('{4}');
+        var temp = document.getElementById('{0}-event-publisher');
+        var targetEventPublisher = document.getElementById('{4}-event-publisher');
+        var triggerEventPublisher = triggerElement;
+        if(temp)
+        {{
+            triggerEventPublisher = temp
+        }}
+        targetElement.addEventListener('change', function(e) {{
+            var event = document.createEvent('HTMLEvents');
+            event.initEvent('change', true, false);
+            targetEventPublisher.dispatchEvent(event);  
+        }})
         var preselectedValue = '{5}';
-        triggerElement.addEventListener('change', function(e) {{
-            {7}
+        triggerEventPublisher.addEventListener('change', function(e) {{ 
+            {6}
+            console.log('{4} IN Changed Handler (After {0} changed)');                      
             var value = triggerElement.value;
             var items = '<option value="""">{3}</option>';            
             if (!value) {{
@@ -53,8 +66,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 targetElement.value = '';                
                 var event = document.createEvent('HTMLEvents');
                 event.initEvent('change', true, false);
-                targetElement.dispatchEvent(event);
-                {6}
+                targetEventPublisher.dispatchEvent(event);                
                 return;
             }}
             var url = '{1}?{2}=' + value;
@@ -62,8 +74,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
             request.open('GET', url, true);
             var isSelected = false;
             request.onload = function () {{
-                if (request.status >= 200 && request.status < 400) {{
-                    // Success!
+                if (request.status >= 200 && request.status < 400) {{                    
                     var data = JSON.parse(request.responseText);
                     if (data) {{                        
                         data.forEach(function(item, i) {{                              
@@ -74,10 +85,11 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                         {{                           
                             targetElement.value = preselectedValue;                            
                             preselectedValue = null;                           
-                        }}  
+                        }}                          
                         var event = document.createEvent('HTMLEvents');
                         event.initEvent('change', true, false);
-                        targetElement.dispatchEvent(event);                                                                                          
+                        targetEventPublisher.dispatchEvent(event);  
+                        {7}                                                                                         
                     }}
                 }} else {{
                     console.log(request.statusText);
@@ -94,13 +106,14 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
         {{
             var event = document.createEvent('HTMLEvents');
             event.initEvent('change', true, false);
-            triggerElement.dispatchEvent(event);           
+            triggerEventPublisher.dispatchEvent(event);          
         }} 
     }};
 
     if (document.readyState != 'loading') {{
         initCascadeDropDownFor{4}();
     }} else {{
+        document.addEventListener('DOMContentLoaded', initCascadeDropDownFor{4});
         document.addEventListener('DOMContentLoaded', initCascadeDropDownFor{4});
     }}
 </script>";
@@ -295,6 +308,39 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 dictionary);
         }
 
+        /// <summary>
+        /// The cascading drop down list.
+        /// </summary>
+        /// <param name="htmlHelper">
+        /// The html helper.
+        /// </param>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <param name="inputId">
+        /// The input id.
+        /// </param>
+        /// <param name="triggeredByProperty">
+        /// The triggered by property.
+        /// </param>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        /// <param name="actionParam">
+        /// The action param.
+        /// </param>
+        /// <param name="optionLabel">
+        /// The option label.
+        /// </param>
+        /// <param name="disabledWhenParentNotSelected">
+        /// The disabled when parent not selected.
+        /// </param>
+        /// <param name="htmlAttributes">
+        /// The html attributes.
+        /// </param>
+        /// <returns>
+        /// The <see cref="MvcHtmlString"/>.
+        /// </returns>
         public static MvcHtmlString CascadingDropDownList(
             this HtmlHelper htmlHelper,
             string name,
@@ -324,15 +370,20 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
 
             string script;
 
-            var type = htmlHelper.ViewData.Model.GetType();
-            var defaultVal = type.IsValueType ? Activator.CreateInstance(type) : null;
             var modelValue = string.Empty;
-            if (defaultVal != null || htmlHelper.ViewData.Model != null)
+
+            if (htmlHelper.ViewData.Model != null)
             {
-                if (defaultVal != null &&
-                    !htmlHelper.ViewData.Model.ToString().Equals(defaultVal.ToString(), StringComparison.Ordinal))
+                var type = htmlHelper.ViewData.Model.GetType();
+                var defaultVal = type.IsValueType ? Activator.CreateInstance(type) : null;
+
+                if (defaultVal != null || htmlHelper.ViewData.Model != null)
                 {
-                    modelValue = htmlHelper.ViewData.Model.ToString();
+                    if (defaultVal != null
+                        && !htmlHelper.ViewData.Model.ToString().Equals(defaultVal.ToString(), StringComparison.Ordinal))
+                    {
+                        modelValue = htmlHelper.ViewData.Model.ToString();
+                    }
                 }
             }
 
@@ -363,7 +414,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                     string.Empty);
             }
 
-            var spanEventHandler = "<span id='" + inputId + "evenhHandler'></span>";
+            var spanEventHandler = "<span id='" + inputId + "-event-publisher'></span>";
 
             var cascadingDropDownString = spanEventHandler + Environment.NewLine + defaultDropDownHtml + Environment.NewLine + script;
 
@@ -806,10 +857,13 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
             ModelMetadata metadata = ModelMetadata.FromStringExpression(name, htmlHelper.ViewData);
 
             IList<SelectListItem> selectListItems = selectList as IList<SelectListItem> ?? selectList.ToList();
-            var selectedItem = selectListItems.FirstOrDefault(i => i.Value == htmlHelper.ViewData.Model.ToString());
-            if (selectedItem != null)
+            if (htmlHelper.ViewData.Model != null)
             {
-                selectedItem.Selected = true;
+                var selectedItem = selectListItems.FirstOrDefault(i => i.Value == htmlHelper.ViewData.Model.ToString());
+                if (selectedItem != null)
+                {
+                    selectedItem.Selected = true;
+                }
             }
             return GetReadonlyValue(metadata, selectListItems, htmlAttributes)
                    ?? htmlHelper.DropDownList(name, selectListItems, optionLabel, htmlAttributes);

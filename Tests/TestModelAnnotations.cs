@@ -12,11 +12,11 @@ namespace WebApplication1
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Policy;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
 
     using FluentDataAnnotations;
 
@@ -33,8 +33,16 @@ namespace WebApplication1
         /// Initializes a new instance of the <see cref="TestModelAnnotations"/> class.
         /// </summary>
         public TestModelAnnotations()
-        {
-            string actionUrl = "http://localhost:1665/Home/Get2IdsList";
+        {            
+            Func<string> action = () =>
+                {
+                    HttpContextWrapper httpContextWrapper = new HttpContextWrapper(System.Web.HttpContext.Current);
+                    UrlHelper urlHelper =
+                        new UrlHelper(
+                            new RequestContext(httpContextWrapper, RouteTable.Routes.GetRouteData(httpContextWrapper)));
+
+                    return urlHelper.Action("Get2IdsList", "Home");
+                };
 
             this.When(
                 p => p.ApplyAnnotations, 
@@ -85,11 +93,11 @@ namespace WebApplication1
 
                         this.For(p => p.SelectedIds2)
                             .SetDisplayName("CascadeDropdown")
-                            .SetCascadingDropDown(m => m.SelectedIds, actionUrl, "id", "Please select cascade", true);
+                            .SetCascadingDropDown(m => m.SelectedIds, action, "id", "Please select cascade", true);
 
                         this.For(p => p.SelectedIds3)
                            .SetDisplayName("CascadeDropdown")
-                           .SetCascadingDropDown(m => m.SelectedIds2, actionUrl, "id", "Please select cascade 2", true);
+                           .SetCascadingDropDown(m => m.SelectedIds2, action, "id", "Please select cascade 2", true);
                     });
 
         }
