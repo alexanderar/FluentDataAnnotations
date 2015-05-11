@@ -114,7 +114,6 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
         initCascadeDropDownFor{4}();
     }} else {{
         document.addEventListener('DOMContentLoaded', initCascadeDropDownFor{4});
-        document.addEventListener('DOMContentLoaded', initCascadeDropDownFor{4});
     }}
 </script>";
 
