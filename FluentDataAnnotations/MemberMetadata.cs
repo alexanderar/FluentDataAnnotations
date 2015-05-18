@@ -729,7 +729,7 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata{T}"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown<TSelect>(Expression<Func<T, TSelect>> property, string optionLabel = null)
+        public MemberMetadata<T> SetDropDown<TSelect>(Expression<Func<T, TSelect>> property, string optionLabel = null, bool IsMultiSelct = false)
             where TSelect : IEnumerable<SelectListItem>
         {
             if (property != null)
@@ -739,11 +739,14 @@ namespace FluentDataAnnotations
                 Func<T, IEnumerable<SelectListItem>> func = expr.Compile();
                 this._selectListDropDownFromModelFunc = func;
                 this.OptionLabelForDropDown = optionLabel;
+                this.IsMultiSelctForDropDown = IsMultiSelct;
                 this._isDropDown = true;
             }
 
             return this;
         }
+
+        internal bool IsMultiSelctForDropDown { get; private set; }
 
         /// <summary>
         /// The set drop down.
@@ -757,10 +760,11 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata{T}"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc, string optionLabel = null)
+        public MemberMetadata<T> SetDropDown(Func<IList<SelectListItem>> selectListFunc, string optionLabel = null, bool IsMultiSelct = false)
         {
             this._selectListDropDownFunc = selectListFunc;
             this.OptionLabelForDropDown = optionLabel;
+            this.IsMultiSelctForDropDown = IsMultiSelct;
             this._isDropDown = true;
             return this;
         }
@@ -777,10 +781,11 @@ namespace FluentDataAnnotations
         /// <returns>
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
-        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList, string optionLabel = null)
+        public MemberMetadata<T> SetDropDown(IList<SelectListItem> selectList, string optionLabel = null, bool IsMultiSelct = false)
         {
             this._selectListDropDown = selectList;
             this.OptionLabelForDropDown = optionLabel;
+            this.IsMultiSelctForDropDown = IsMultiSelct;
             this._isDropDown = true;
             return this;
         }

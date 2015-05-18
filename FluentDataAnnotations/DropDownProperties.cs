@@ -9,5 +9,7 @@ namespace FluentDataAnnotations
         public IEnumerable<SelectListItem> SelectList { get; set; }
 
         public string OptionLabel { get; set; }
+
+        public bool IsMultiSelect { get; set; }
     }
 }

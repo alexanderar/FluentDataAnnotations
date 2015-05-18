@@ -328,7 +328,9 @@ namespace FluentDataAnnotations
                 var props = new DropDownProperties
                                 {
                                     OptionLabel =
-                                        this._modelMetadata[propName].OptionLabelForDropDown
+                                        this._modelMetadata[propName].OptionLabelForDropDown,
+                                    IsMultiSelect = 
+                                    this._modelMetadata[propName].IsMultiSelctForDropDown
                                 };
                 if (this._modelMetadata[propName].SelectListForDropDown != null)
                 {

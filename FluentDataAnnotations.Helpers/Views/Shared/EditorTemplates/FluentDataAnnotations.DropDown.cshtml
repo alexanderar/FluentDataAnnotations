@@ -31,9 +31,12 @@
 
         if (ddProps != null)
         {
-            if (props.ContainsKey("multiple"))
+            if (ddProps.IsMultiSelect || props.ContainsKey("multiple"))
             {
-                props.Remove("multiple");
+                if (props.ContainsKey("multiple"))
+                {
+                    props.Remove("multiple");
+                }
                 @Html.SmartListBoxFor(model => model, ddProps.SelectList, props)
 
             }
@@ -50,9 +53,9 @@
         var cddProps = ViewData.ModelMetadata.AdditionalValues[cascadeKey] as CascadeDropDownProperties;
         if (cddProps != null)
         {
-            var propId = this.Html.ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty);
+            var propId = Html.ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty);
             string triggeredById = cddProps.TriggeredByPropertyId;
-            if (this.Html.ViewData.TemplateInfo.TemplateDepth > 1)
+            if (Html.ViewData.TemplateInfo.TemplateDepth > 1)
             {
                 var index = propId.LastIndexOf(ViewData.ModelMetadata.PropertyName);
                 triggeredById = propId.Remove(index) + cddProps.TriggeredByPropertyId;

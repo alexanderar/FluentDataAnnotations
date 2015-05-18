@@ -39,9 +39,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentDataAnnotations.SimpleInjectorAdapter, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentDataAnnotations.Mvc.SimpleInjectorAdapter.1.0.3\lib\net45\FluentDataAnnotations.SimpleInjectorAdapter.dll</HintPath>
+    <Reference Include="FluentDataAnnotations">
+      <HintPath>..\packages\FluentDataAnnotations.Mvc.Core.1.1.6\lib\net45\FluentDataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentDataAnnotations.Helpers">
+      <HintPath>..\packages\FluentDataAnnotations.Mvc.1.1.6\lib\net45\FluentDataAnnotations.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentDataAnnotations.SimpleInjectorAdapter">
+      <HintPath>..\packages\FluentDataAnnotations.Mvc.SimpleInjectorAdapter.1.0.5\lib\net45\FluentDataAnnotations.SimpleInjectorAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SimpleInjector">
@@ -220,16 +225,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FluentDataAnnotations.Helpers\FluentDataAnnotations.Mvc.csproj">
-      <Project>{a113512e-8efe-4734-aa6e-1b92cc63c8e1}</Project>
-      <Name>FluentDataAnnotations.Mvc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FluentDataAnnotations\FluentDataAnnotations.Core.csproj">
-      <Project>{c4cae14c-f031-4ae3-a8da-838ba0b3e8a9}</Project>
-      <Name>FluentDataAnnotations.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

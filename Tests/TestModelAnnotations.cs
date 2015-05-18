@@ -101,11 +101,11 @@ namespace WebApplication1
                            .SetDisplayName("CascadeDropdown")
                            .SetCascadingDropDown(m => m.SelectedIds2, action, "id", "Please select cascade 2", true);
 
-                        this.For(p => p.EnumerableEnum)
-                           .SetDisplayName("EnumerableEnum").SetDropDown(GetEnumsList);
+                        //this.For(p => p.EnumerableEnum)
+                        //   .SetDisplayName("EnumerableEnum").SetDropDown(GetEnumsList);
 
                         this.For(p => p.EnumerableEnums)
-                           .SetDisplayName("EnumerableEnums").SetDropDown(GetEnumsList);
+                           .SetDisplayName("EnumerableEnums").SetDropDown(GetEnumsList, null, true);
                     });
 
         }
