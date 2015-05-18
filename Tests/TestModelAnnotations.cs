@@ -11,6 +11,7 @@ namespace WebApplication1
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -20,6 +21,7 @@ namespace WebApplication1
 
     using FluentDataAnnotations;
 
+    using WebApplication1.Controllers;
     using WebApplication1.Models;
 
     /// <summary>
@@ -98,6 +100,12 @@ namespace WebApplication1
                         this.For(p => p.SelectedIds3)
                            .SetDisplayName("CascadeDropdown")
                            .SetCascadingDropDown(m => m.SelectedIds2, action, "id", "Please select cascade 2", true);
+
+                        this.For(p => p.EnumerableEnum)
+                           .SetDisplayName("EnumerableEnum").SetDropDown(GetEnumsList);
+
+                        this.For(p => p.EnumerableEnums)
+                           .SetDisplayName("EnumerableEnums").SetDropDown(GetEnumsList);
                     });
 
         }
@@ -124,6 +132,20 @@ namespace WebApplication1
 
             return selectItems;
         }
+
+        private IList<SelectListItem> GetEnumsList()
+        {
+            return Enum.GetValues(typeof(TestEnum))
+               .Cast<TestEnum>()
+               .Select(x => new SelectListItem
+               {
+                   Value = x.ToString(),
+                   Text = x.ToString()
+               }).ToList();
+        }
+
+
+       
 
         #endregion
     }

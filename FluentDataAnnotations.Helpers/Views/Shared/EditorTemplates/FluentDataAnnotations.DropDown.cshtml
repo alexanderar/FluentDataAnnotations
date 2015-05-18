@@ -31,7 +31,16 @@
 
         if (ddProps != null)
         {
-            @Html.SmartDropDownList(string.Empty, ddProps.SelectList, ddProps.OptionLabel ?? string.Empty, props)
+            if (props.ContainsKey("multiple"))
+            {
+                props.Remove("multiple");
+                @Html.SmartListBoxFor(model => model, ddProps.SelectList, props)
+
+            }
+            else
+            {
+                @Html.SmartDropDownListFor(model => model, ddProps.SelectList, ddProps.OptionLabel ?? string.Empty, props)
+            }
             return;
         }
     }

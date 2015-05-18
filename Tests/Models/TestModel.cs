@@ -30,6 +30,10 @@
 
         public IList<SelectListItem> Ids { get; set; }
 
+        public TestEnum EnumerableEnum { get; set; }
+
+        public IList<TestEnum> EnumerableEnums { get; set; }
+
         public string Phone { get; set; }
 
         public bool ApplyAnnotations { get; set; }

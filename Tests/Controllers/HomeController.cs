@@ -48,7 +48,9 @@ namespace WebApplication1.Controllers
                                 //SelectedIds3 = 553,
                                 Phone = "029917064", 
                                 ApplyAnnotations = true,
-                                Ids = GetIdsList()
+                                Ids = GetIdsList(),
+                                EnumerableEnum = TestEnum.Test2,
+                                EnumerableEnums = new List<TestEnum> { TestEnum.Test1, TestEnum.Test3 }
                             };
             return this.View(model);
         }

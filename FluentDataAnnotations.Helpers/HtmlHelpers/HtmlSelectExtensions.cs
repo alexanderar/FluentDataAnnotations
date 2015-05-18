@@ -9,6 +9,7 @@
 namespace FluentDataAnnotations.Helpers.HtmlHelpers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -1285,7 +1286,13 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
 
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
 
+            var selectedVal = expression.Compile().Invoke((TModel)metadata.Model);
             IList<SelectListItem> selectListItems = selectList as IList<SelectListItem> ?? selectList.ToList();
+            var selectedItem = selectListItems.FirstOrDefault(i => i.Value == selectedVal.ToString());
+            if (selectedItem != default(SelectListItem))
+            {
+                selectedItem.Selected = true;
+            }
 
             return GetReadonlyValue(metadata, selectListItems, htmlAttributes)
                    ?? htmlHelper.DropDownListFor(expression, selectListItems, optionLabel, htmlAttributes);
@@ -1681,8 +1688,21 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
             }
 
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
-
             IList<SelectListItem> selectListItems = selectList as IList<SelectListItem> ?? selectList.ToList();
+
+            var selectedValues = expression.Compile().Invoke((TModel)metadata.Model);
+            if (selectedValues.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
+            {
+                foreach (var val in (IEnumerable)selectedValues)
+                {
+                    var str = val.ToString();
+                    var item = selectListItems.FirstOrDefault(i => i.Value == str);
+                    if (item != default(SelectListItem))
+                    {
+                        item.Selected = true;
+                    }
+                }
+            }
 
             return GetReadonlyValue(metadata, selectListItems, htmlAttributes)
                    ?? htmlHelper.ListBoxFor(expression, selectListItems, htmlAttributes);
