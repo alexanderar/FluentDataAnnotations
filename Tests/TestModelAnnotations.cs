@@ -133,7 +133,7 @@ namespace WebApplication1
             return selectItems;
         }
 
-        private IList<SelectListItem> GetEnumsList()
+        public static IList<SelectListItem> GetEnumsList()
         {
             return Enum.GetValues(typeof(TestEnum))
                .Cast<TestEnum>()

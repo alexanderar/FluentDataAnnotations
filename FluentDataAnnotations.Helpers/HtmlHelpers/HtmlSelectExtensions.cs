@@ -1286,7 +1286,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
 
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
 
-            var selectedVal = expression.Compile().Invoke((TModel)metadata.Model);
+            var selectedVal = expression.Compile().Invoke(htmlHelper.ViewData.Model);
             IList<SelectListItem> selectListItems = selectList as IList<SelectListItem> ?? selectList.ToList();
             var selectedItem = selectListItems.FirstOrDefault(i => i.Value == selectedVal.ToString());
             if (selectedItem != default(SelectListItem))
@@ -1690,7 +1690,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
             IList<SelectListItem> selectListItems = selectList as IList<SelectListItem> ?? selectList.ToList();
 
-            var selectedValues = expression.Compile().Invoke((TModel)metadata.Model);
+            var selectedValues = expression.Compile().Invoke(htmlHelper.ViewData.Model);
             if (selectedValues.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
             {
                 foreach (var val in (IEnumerable)selectedValues)
