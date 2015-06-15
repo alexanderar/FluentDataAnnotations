@@ -359,7 +359,7 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                     htmlAttributes = new RouteValueDictionary();
                 }
 
-                htmlAttributes.Add("disabled", "disabled");
+                htmlAttributes["disabled"] = "disabled";
             }
 
             var defaultDropDownHtml = htmlHelper.SmartDropDownList(
@@ -377,10 +377,11 @@ namespace FluentDataAnnotations.Helpers.HtmlHelpers
                 var type = htmlHelper.ViewData.Model.GetType();
                 var defaultVal = type.IsValueType ? Activator.CreateInstance(type) : null;
 
-                if (defaultVal != null || htmlHelper.ViewData.Model != null)
+                var strValue = defaultVal == null ? string.Empty : defaultVal.ToString();
+
+                if (htmlHelper.ViewData.Model != null)
                 {
-                    if (defaultVal != null
-                        && !htmlHelper.ViewData.Model.ToString().Equals(defaultVal.ToString(), StringComparison.Ordinal))
+                    if (!htmlHelper.ViewData.Model.ToString().Equals(strValue, StringComparison.Ordinal))
                     {
                         modelValue = htmlHelper.ViewData.Model.ToString();
                     }

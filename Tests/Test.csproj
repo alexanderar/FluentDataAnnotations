@@ -39,15 +39,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentDataAnnotations">
-      <HintPath>..\packages\FluentDataAnnotations.Mvc.Core.1.1.6\lib\net45\FluentDataAnnotations.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentDataAnnotations.Helpers">
-      <HintPath>..\packages\FluentDataAnnotations.Mvc.1.1.6\lib\net45\FluentDataAnnotations.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentDataAnnotations.SimpleInjectorAdapter">
-      <HintPath>..\packages\FluentDataAnnotations.Mvc.SimpleInjectorAdapter.1.0.5\lib\net45\FluentDataAnnotations.SimpleInjectorAdapter.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SimpleInjector">
       <HintPath>..\packages\SimpleInjector.2.6.1\lib\net45\SimpleInjector.dll</HintPath>
@@ -183,20 +174,23 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Shared\EditorTemplates\FluentDataAnnotations.DropDown.cshtml">
+      <SubType>
+      </SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\Object.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Byte.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmailAddress.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\FluentDataAnnotations.DropDown.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\HiddenInput.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\HtmlInput.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultilineText.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Number.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Object.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Password.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PhoneNumber.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SByte.cshtml" />
@@ -225,6 +219,20 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FluentDataAnnotations.Helpers\FluentDataAnnotations.Mvc.csproj">
+      <Project>{a113512e-8efe-4734-aa6e-1b92cc63c8e1}</Project>
+      <Name>FluentDataAnnotations.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FluentDataAnnotations.SimpleInjectorAdapter\FluentDataAnnotations.SimpleInjectorAdapter.csproj">
+      <Project>{7579fc6e-0a81-4ee0-ac73-60dc7ccb1f36}</Project>
+      <Name>FluentDataAnnotations.SimpleInjectorAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FluentDataAnnotations\FluentDataAnnotations.Core.csproj">
+      <Project>{c4cae14c-f031-4ae3-a8da-838ba0b3e8a9}</Project>
+      <Name>FluentDataAnnotations.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -43,12 +43,20 @@ namespace WebApplication1.Controllers
                                 HiddenTest = 123, 
                                 Time = DateTime.Now, 
                                 NulableBoolean = true,
-                                //SelectedIds = 5,
-                                //SelectedIds2 = 55,
-                                //SelectedIds3 = 553,
+                                Double = 12.567,
+                                SelectedIds = 5,
+                                SelectedIds2 = 55,
+                                SelectedIds3 = 553,
+                                Country = "US",
+                                State = "NY",
                                 Phone = "029917064", 
                                 ApplyAnnotations = true,
                                 Ids = GetIdsList(),
+                                Countries = new List<SelectListItem>
+                                  {
+                                      new SelectListItem{Text = "US", Value = "US"},
+                                      new SelectListItem{Text = "UK",Value = "UK"}
+                                  },
                                 EnumerableEnum = TestEnum.Test2,
                                 EnumerableEnums = new List<TestEnum> { TestEnum.Test1, TestEnum.Test3 }
                             };
@@ -78,6 +86,24 @@ namespace WebApplication1.Controllers
             return Json(selectItems, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetStates(string country)
+        {
+            var selectItems = new List<SelectListItem>();
+            if (country == "US")
+            {
+                selectItems.Add(new SelectListItem{Text = "New York",Value = "NY"});
+                selectItems.Add(new SelectListItem { Text = "California", Value = "CA" });
+            }
+            else
+            {
+                selectItems.Add(new SelectListItem{Text = "London",Value = "LY"});
+                selectItems.Add(new SelectListItem { Text = "Man", Value = "Ma" });
+            
+            }
+          
+            return Json(selectItems, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// The index.
         /// </summary>
@@ -91,7 +117,12 @@ namespace WebApplication1.Controllers
         [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Index(TestModel model)
         {
-            model.Ids = GetIdsList();
+            model.Ids = GetIdsList();   
+            model.Countries = new List<SelectListItem>
+                                  {
+                                      new SelectListItem{Text = "US", Value = "US"},
+                                      new SelectListItem{Text = "UK",Value = "UK"}
+                                  };
             model.ApplyAnnotations = true;
             return this.View(model);
         }

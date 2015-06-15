@@ -297,16 +297,16 @@ namespace FluentDataAnnotations
         /// </returns>
         IList<Tuple<Func<bool>, Action>> IFluentAnnotation.GetConditionalActions(object target)
         {
-            if (target == null)
+            if (target == null || !(target is T))
             {
                 return new List<Tuple<Func<bool>, Action>>();
             }
 
             var model = (T)target;
             return target.GetType() == typeof(T)
-                       ? this._modelActions.Select(t => new Tuple<Func<bool>, Action>(() => t.Item1(model), t.Item2))
-                             .ToList()
-                       : new List<Tuple<Func<bool>, Action>>();
+                        ? this._modelActions.Select(
+                            t => new Tuple<Func<bool>, Action>(() => t.Item1(model), t.Item2)).ToList()
+                        : new List<Tuple<Func<bool>, Action>>();                    
         }
 
         /// <summary>

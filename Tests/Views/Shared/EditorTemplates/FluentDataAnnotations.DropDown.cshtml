@@ -37,12 +37,26 @@
                 {
                     props.Remove("multiple");
                 }
-                @Html.SmartListBoxFor(model => model, ddProps.SelectList, props)
+                if (Model != null)
+                {
+                    @Html.SmartListBoxFor(model => model, ddProps.SelectList, props)
+                }
+                else
+                {
+                    @Html.SmartListBox(string.Empty, ddProps.SelectList, props)
+                }
 
             }
             else
             {
-                @Html.SmartDropDownListFor(model => model, ddProps.SelectList, ddProps.OptionLabel ?? string.Empty, props)
+                if (Model != null)
+                {
+                    @Html.SmartDropDownListFor(model => model, ddProps.SelectList, ddProps.OptionLabel, props)
+                }
+                else
+                {
+                    @Html.SmartDropDownList(string.Empty, ddProps.SelectList, ddProps.OptionLabel, props)
+                }
             }
             return;
         }

@@ -46,6 +46,16 @@ namespace WebApplication1
                     return urlHelper.Action("Get2IdsList", "Home");
                 };
 
+            Func<string> getStatesAction = () =>
+            {
+                HttpContextWrapper httpContextWrapper = new HttpContextWrapper(System.Web.HttpContext.Current);
+                UrlHelper urlHelper =
+                    new UrlHelper(
+                        new RequestContext(httpContextWrapper, RouteTable.Routes.GetRouteData(httpContextWrapper)));
+
+                return urlHelper.Action("GetStates", "Home");
+            };
+
             this.When(
                 p => p.ApplyAnnotations, 
                 () =>
@@ -64,7 +74,9 @@ namespace WebApplication1
 
                         this.For(x => x.HiddenTest).SetHiddenInput();
 
-                        this.For(x => x.Time).SetDisplayFormat("{0:MM.dd.yyyy hh:mm:ss}", true).SetReadOnly(true, false);
+                        this.For(x => x.Time).SetDisplayFormat("{0:MM-dd-yyyy}", true).SetReadOnly(true, false);
+
+                        this.For(x => x.Double).SetDisplayFormat("{0:F}", true);
 
                         this.For(x => x.NulableBoolean).SetReadOnly(true);
 
@@ -100,6 +112,14 @@ namespace WebApplication1
                         this.For(p => p.SelectedIds3)
                            .SetDisplayName("CascadeDropdown")
                            .SetCascadingDropDown(m => m.SelectedIds2, action, "id", "Please select cascade 2", true);
+
+                        this.For(p => p.Country)
+                            .SetDisplayName("Country")
+                            .SetDropDown(p => p.Countries, "Please select Country");
+
+                        this.For(p => p.State)
+                            .SetDisplayName("State")
+                            .SetCascadingDropDown(m => m.Country, getStatesAction, "country", "Please select cascade", true);
 
                         //this.For(p => p.EnumerableEnum)
                         //   .SetDisplayName("EnumerableEnum").SetDropDown(GetEnumsList);

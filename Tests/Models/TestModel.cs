@@ -20,6 +20,8 @@
 
         public DateTime Time { get; set; }
 
+        public double Double { get; set; }
+
         public bool? NulableBoolean { get; set; }
 
         public int SelectedIds { get; set; }
@@ -27,6 +29,12 @@
         public int SelectedIds2 { get; set; }
 
         public int SelectedIds3 { get; set; }
+
+        public string Country { get; set; }
+
+        public IList<SelectListItem> Countries{ get; set; }
+
+        public string State { get; set; }
 
         public IList<SelectListItem> Ids { get; set; }
 

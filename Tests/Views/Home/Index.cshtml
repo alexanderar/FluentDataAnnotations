@@ -55,6 +55,15 @@
     </div>
 
     <div class="form-group">
+        @Html.LabelForEdit(m => m.Double, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Double, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DisplayFor(m => m.Double)
+            @Html.DisplayTextFor(model => model.Double)
+        </div>
+    </div>
+
+    <div class="form-group">
         <p>Edit For NulableBoolean</p>
         @Html.LabelForEdit(m => m.NulableBoolean, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -80,6 +89,20 @@
         @Html.LabelForEdit(m => m.SelectedIds3, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.EditorFor(m => m.SelectedIds3, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelForEdit(m => m.Country, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.Country, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelForEdit(m => m.State, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.EditorFor(m => m.State, new { htmlAttributes = new { @class = "form-control" } })
         </div>
     </div>
 
