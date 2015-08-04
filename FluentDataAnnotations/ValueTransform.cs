@@ -8,7 +8,7 @@ namespace FluentDataAnnotations
 {
     public class ValueTransform
     {
-        public Func<string,string> ValueTransformFunc { get; set; }
+        public Func<object,string> ValueTransformFunc { get; set; }
 
         public bool ApplyTransformInEditMode { get; set; }
     }

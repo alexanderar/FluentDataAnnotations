@@ -433,7 +433,7 @@ namespace FluentDataAnnotations
         /// The <see cref="MemberMetadata"/>.
         /// </returns>
         public MemberMetadata<T> ApplyValueTransform(
-            Func<string, string> valueTransformFunc, 
+            Func<object, string> valueTransformFunc, 
             bool applyTransformInEditMode = true)
         {
             this.ValueTransform = new ValueTransform

@@ -281,7 +281,7 @@ namespace FluentDataAnnotations
                 if (valueTransform != null)
                 {
                     object model = modelAccessor();
-                    if (model is string && valueTransform.ValueTransformFunc != null)
+                    if (valueTransform.ValueTransformFunc != null)
                     {
                         string value = valueTransform.ValueTransformFunc(model.ToString());
                         displayFormatAttr.ApplyFormatInEditMode = valueTransform.ApplyTransformInEditMode;

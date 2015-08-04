@@ -83,7 +83,9 @@ namespace WebApplication1
                         this.For(m => m.Phone)
                             .SetDisplayName("Phone")
                             .ApplyValueTransform(
-                                s => Regex.Replace(s, @"(?<=\d{1})\d(?=\d{3})", "*", RegexOptions.Compiled));
+                                s => s + "asdfasdf");
+                            //.ApplyValueTransform(
+                            //    s => Regex.Replace(s, @"(?<=\d{1})\d(?=\d{3})", "*", RegexOptions.Compiled));
 
                         this.For(x => x.OldPassword)
                             .SetDisplayName(() => "Fluent Old Password (Function)")
@@ -121,8 +123,7 @@ namespace WebApplication1
                             .SetDisplayName("State")
                             .SetCascadingDropDown(m => m.Country, getStatesAction, "country", "Please select cascade", true);
 
-                        //this.For(p => p.EnumerableEnum)
-                        //   .SetDisplayName("EnumerableEnum").SetDropDown(GetEnumsList);
+                        this.For(p => p.EnumerableEnum).ApplyValueTransform(s => s + "asdfasdf");
 
                         this.For(p => p.EnumerableEnums)
                            .SetDisplayName("EnumerableEnums").SetDropDown(GetEnumsList, null, true);
