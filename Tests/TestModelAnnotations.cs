@@ -123,7 +123,7 @@ namespace WebApplication1
                             .SetDisplayName("State")
                             .SetCascadingDropDown(m => m.Country, getStatesAction, "country", "Please select cascade", true);
 
-                        this.For(p => p.EnumerableEnum).ApplyValueTransform(s => s + "asdfasdf");
+                        this.For(p => p.EnumerableEnum).SetReadOnly(true, false).ApplyValueTransform(s => s + "asdfasdf");
 
                         this.For(p => p.EnumerableEnums)
                            .SetDisplayName("EnumerableEnums").SetDropDown(GetEnumsList, null, true);

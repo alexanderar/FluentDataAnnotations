@@ -421,7 +421,10 @@ namespace FluentDataAnnotations
         #region Public Methods and Operators
 
         /// <summary>
-        /// The apply value transform.
+        /// The apply value transformation. 
+        /// If the property is read only and it is rendered NOT as disabled input but as display template, 
+        /// the transform applied only to the display template value. 
+        /// Corresponding hidden input will have the original model value
         /// </summary>
         /// <param name="valueTransformFunc">
         /// The value transform function.
